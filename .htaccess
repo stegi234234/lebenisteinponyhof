@@ -1,0 +1,32 @@
+# UTF-8 Standard-Encoding
+AddDefaultCharset utf-8
+
+# Rewrite Engine aktivieren
+RewriteEngine On
+
+# Fallback auf index.html bei allen Pfaden (Nuxt SPA oder statische Prerender-Seiten)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ /index.html [L]
+
+# Richtiger MIME-Type für WebP (IONOS kann das sonst falsch behandeln)
+AddType image/webp .webp
+
+# Gzip-Komprimierung (falls nicht vom Server aktiviert)
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json image/svg+xml
+</IfModule>
+
+# Browser-Caching für statische Assets (optimiert für Nuxt-Static)
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/css "access plus 7 days"
+  ExpiresByType application/javascript "access plus 7 days"
+  ExpiresByType image/webp "access plus 30 days"
+  ExpiresByType image/png "access plus 30 days"
+  ExpiresByType image/jpeg "access plus 30 days"
+  ExpiresByType image/svg+xml "access plus 30 days"
+</IfModule>
+
+# Sicherheit: Directory Listing verhindern
+Options -Indexes
