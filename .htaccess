@@ -1,32 +1,56 @@
-# UTF-8 Standard-Encoding
-AddDefaultCharset utf-8
+# ================
+# .htaccess
+# ================
 
-# Rewrite Engine aktivieren
-RewriteEngine On
+# HTTPS & non-www Enforcement
+<IfModule mod_rewrite.c>
+  RewriteEngine On
 
-# Fallback auf index.html bei allen Pfaden (Nuxt SPA oder statische Prerender-Seiten)
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^ /index.html [L]
+  # Force HTTPS
+  RewriteCond %{HTTPS} off
+  RewriteRule ^ https://lebenisteinponyhof.de%{REQUEST_URI} [L,R=301]
 
-# Richtiger MIME-Type für WebP (IONOS kann das sonst falsch behandeln)
-AddType image/webp .webp
-
-# Gzip-Komprimierung (falls nicht vom Server aktiviert)
-<IfModule mod_deflate.c>
-  AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json image/svg+xml
+  # Redirect www to non-www
+  RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+  RewriteRule ^ https://%1%{REQUEST_URI} [L,R=301]
 </IfModule>
 
-# Browser-Caching für statische Assets (optimiert für Nuxt-Static)
+# Security Headers
+<IfModule mod_headers.c>
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# Disable Directory Listing
+Options -Indexes
+
+# Compression (mod_deflate)
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/plain text/html text/xml
+  AddOutputFilterByType DEFLATE text/css application/javascript application/json
+  AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+# Caching (mod_expires)
 <IfModule mod_expires.c>
   ExpiresActive On
-  ExpiresByType text/css "access plus 7 days"
-  ExpiresByType application/javascript "access plus 7 days"
-  ExpiresByType image/webp "access plus 30 days"
-  ExpiresByType image/png "access plus 30 days"
-  ExpiresByType image/jpeg "access plus 30 days"
-  ExpiresByType image/svg+xml "access plus 30 days"
+  ExpiresByType image/jpeg "access plus 1 month"
+  ExpiresByType image/png "access plus 1 month"
+  ExpiresByType image/gif "access plus 1 month"
+  ExpiresByType image/webp "access plus 1 month"
+  ExpiresByType text/css "access plus 1 month"
+  ExpiresByType application/javascript "access plus 1 month"
+  ExpiresByType application/font-woff2 "access plus 1 month"
+  ExpiresByType application/font-woff "access plus 1 month"
 </IfModule>
 
-# Sicherheit: Directory Listing verhindern
-Options -Indexes
+# Remove ETags
+<IfModule mod_headers.c>
+  Header unset ETag
+</IfModule>
+FileETag None
+
+# Custom 404 Page
+ErrorDocument 404 /404.html

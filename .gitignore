@@ -1,16 +1,35 @@
-# bereits vorhanden:
-.nuxt
-.output
-dist
-node_modules
+# Nuxt & Build
+.nuxt/
+.output/
+dist/
+node_modules/
+
+# Env-Dateien
 .env
 .env.*
 !.env.example
-.idea
-.vscode
+
+# Editor & OS
+.idea/
+.vscode/
 *.DS_Store
 
-# Ergänzen:
+# GROSSE ORDNER & ZIPS AUSSCHLIESSEN
+public/images/
+media-originals/
+assets/
+*.zip
+# GROSSE ORDNER
 public/images/
 public/videos/
-public/assets/
+assets/
+media-originals/
+
+# Zips und anderes
+*.zip
+*.webm
+*.mp4
+*.jpeg
+*.jpg
+*.png
+*.webp

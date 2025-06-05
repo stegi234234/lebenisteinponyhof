@@ -1,0 +1,81 @@
+# UTF-8 Standard-Encoding
+AddDefaultCharset utf-8
+
+# Rewrite Engine aktivieren (kann oft bleiben, falls andere Regeln folgen oder für Reverse Proxy Setups benötigt)
+RewriteEngine On
+
+# ----------------------------------------------------------------------
+# HINWEIS ZUM NUXXT SSR ROUTING:
+# Die folgenden Regeln zum Umschreiben auf /index.html sind typisch für SPAs oder rein statische Seiten.
+# Bei einer Nuxt SSR-Anwendung, die von einem Node.js-Server bedient wird (ggf. hinter Apache als Reverse Proxy),
+# sollte Nuxt/Nitro das Routing übernehmen. Diese Regeln könnten hier stören.
+# Wenn dein IONOS-Setup so ist, dass Apache Anfragen an den Node.js-Prozess weiterleitet,
+# sind diese speziellen RewriteRules für das Nuxt-Routing wahrscheinlich NICHT hier in .htaccess nötig.
+# Teste, ob deine Seite ohne sie funktioniert. Wenn ja, lasse sie weg.
+# ----------------------------------------------------------------------
+
+
+
+# Richtiger MIME-Type für WebP
+AddType image/webp .webp
+AddType image/svg+xml .svg # SVG auch explizit setzen
+
+# Gzip-Komprimierung (falls nicht vom Server standardmäßig aktiviert)
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json image/svg+xml application/font-woff application/font-woff2
+</IfModule>
+
+# Browser-Caching für statische Assets
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresDefault                          "access plus 1 month"
+
+  # Bilder (lange cachen)
+  ExpiresByType image/jpeg                "access plus 1 year"
+  ExpiresByType image/gif                 "access plus 1 year"
+  ExpiresByType image/png                 "access plus 1 year"
+  ExpiresByType image/webp                "access plus 1 year"
+  ExpiresByType image/svg+xml             "access plus 1 year"
+  ExpiresByType image/x-icon              "access plus 1 year"
+
+  # CSS & JavaScript (Nuxt versioniert Assets im _nuxt Ordner mit Hashes)
+  # Daher können diese sehr lange gecached werden.
+  ExpiresByType text/css                  "access plus 1 year"
+  ExpiresByType application/javascript    "access plus 1 year"
+  ExpiresByType application/x-javascript  "access plus 1 year"
+
+  # Fonts (falls du welche lokal hostest)
+  ExpiresByType application/font-woff     "access plus 1 year"
+  ExpiresByType application/font-woff2    "access plus 1 year"
+  ExpiresByType application/vnd.ms-fontobject "access plus 1 year"
+  ExpiresByType application/x-font-ttf    "access plus 1 year"
+
+  # Andere Dateien
+  ExpiresByType application/json          "access plus 0 seconds" # JSON-Payloads nicht lange cachen
+  ExpiresByType application/xml           "access plus 0 seconds" # Sitemaps nicht zu lange cachen
+  ExpiresByType text/html                 "access plus 0 seconds" # HTML-Seiten nicht cachen (da SSR)
+</IfModule>
+
+# Alternative/Ergänzung zu mod_expires für Cache-Control Header
+# Besonders für Nuxt-Assets mit Hashes im Dateinamen
+<IfModule mod_headers.c>
+  # Cache für Assets im _nuxt Ordner (JS, CSS mit Hashes)
+  <FilesMatch "\.(js|css)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  # Cache für Bilder und Fonts
+  <FilesMatch "\.(jpe?g|png|gif|webp|svg|ico|woff2?|eot|ttf)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+</IfModule>
+
+# Sicherheit: Directory Listing verhindern
+Options -Indexes
+
+# Optional: Schutz für .env und andere sensible Dateien (falls im Webroot, was sie nicht sein sollten)
+<Files ".env">
+    Require all denied
+</Files>
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>

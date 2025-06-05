@@ -1,103 +1,111 @@
 // composables/useCookieConsent.ts
-import { ref, readonly, onMounted, watch, computed } from 'vue' // computed hinzugefügt
+import { ref, readonly, onMounted, onUnmounted, watch, computed } from 'vue'
 import { useLocalStorage } from '@vueuse/core'
 
-const COOKIE_CONSENT_KEY = 'cookie_consent_lebenisteinponyhof_v1'
+const COOKIE_CONSENT_KEY = 'cookie_consent_lebenisteinponyhof_v2' // v2 beibehalten oder erhöhen bei Strukturänderung
 
-const defaultConsentValues = {
+export interface ConsentState {
+  analytics: boolean
+  marketing: boolean
+  timestamp: number | null
+}
+
+const defaultConsentValues: ConsentState = {
   analytics: false,
   marketing: false,
   timestamp: null,
 }
 
-// Diese Variablen werden jetzt innerhalb der Composable-Funktion deklariert,
-// damit sie bei jedem Aufruf von useCookieConsent() neu initialisiert werden,
-// aber useLocalStorage sorgt dafür, dass sie denselben Speicherort nutzen.
-// Um einen globalen reaktiven Zustand zu haben, der von mehreren Komponenten geteilt wird,
-// deklarieren wir storedConsent außerhalb, initialisieren es aber erst im Client-Kontext
-// oder innerhalb der Composable-Funktion. Für useLocalStorage ist es sicherer, es innerhalb zu lassen.
+let globalStoredConsent: ReturnType<typeof useLocalStorage<ConsentState>> | null = null
+const globalIsBannerOpen = ref(false)
 
-let storedConsentSingleton = null // Für Singleton-Verhalten
+function initializeConsentState() {
+  if (process.client && !globalStoredConsent) {
+    globalStoredConsent = useLocalStorage<ConsentState>(COOKIE_CONSENT_KEY, defaultConsentValues, {
+      mergeDefaults: (storageValue, defaults) => {
+        const result = { ...defaults, ...storageValue };
+        if (storageValue.timestamp === undefined && Object.keys(storageValue).length > 0) { // Nur Banner zeigen, wenn alter Consent existiert aber ohne Timestamp
+          result.timestamp = null;
+        } else if (Object.keys(storageValue).length === 0) { // Neuer Nutzer
+            result.timestamp = null;
+        }
+        return result;
+      },
+    });
+
+    if (globalStoredConsent.value.timestamp === null) {
+      globalIsBannerOpen.value = true
+    }
+  }
+}
 
 export function useCookieConsent() {
-  // Stelle sicher, dass useLocalStorage nur einmal pro Client-Instanz initialisiert wird,
-  // um das Singleton-Verhalten von LocalStorage zu gewährleisten.
-  if (process.client && !storedConsentSingleton) {
-    storedConsentSingleton = useLocalStorage(COOKIE_CONSENT_KEY, defaultConsentValues, {
-      mergeDefaults: true,
-      // Wichtig für SSR-Kontext, wenn man es serverseitig lesen/schreiben wollte (nicht für localStorage)
-      // Du kannst auch { serverDefaults: () => defaultConsentValues } verwenden,
-      // wenn du useLocalStorage serverseitig nutzen möchtest, was hier aber nicht der Fall ist.
-    })
-  }
-  // Auf dem Server oder wenn schon initialisiert, verwende das Singleton oder einen Fallback
-  const storedConsent = process.client ? storedConsentSingleton : ref(defaultConsentValues)
+  initializeConsentState()
 
-  const _consentFlags = ref({
-    analytics: storedConsent.value?.analytics ?? defaultConsentValues.analytics,
-    marketing: storedConsent.value?.marketing ?? defaultConsentValues.marketing,
-  })
+  const consentState = computed(() => globalStoredConsent?.value || defaultConsentValues)
+  const isBannerOpen = computed(() => globalIsBannerOpen.value)
 
-  const updateInternalConsentFlags = (newStoredConsentValue) => {
-    const currentVal =
-      newStoredConsentValue && typeof newStoredConsentValue === 'object'
-        ? newStoredConsentValue
-        : defaultConsentValues
-    _consentFlags.value.analytics = !!currentVal.analytics
-    _consentFlags.value.marketing = !!currentVal.marketing
-  }
-
-  // Initialisierung und Watcher nur auf dem Client ausführen
-  if (process.client) {
-    onMounted(() => {
-      updateInternalConsentFlags(storedConsent.value)
-    })
-
-    watch(
-      storedConsent,
-      (newValue) => {
-        updateInternalConsentFlags(newValue)
-      },
-      { deep: true }
-    )
-  }
+  const hasConsentForAnalytics = computed(() => consentState.value.analytics)
+  const hasConsentForMarketing = computed(() => consentState.value.marketing)
 
   const openCookieSettings = () => {
     if (process.client) {
-      localStorage.removeItem(COOKIE_CONSENT_KEY)
-      // Reset storedConsent auf Default, um den Banner zu triggern
-      // (wird den Watcher im CookieBanner selbst triggern, wenn er auf _rawStoredConsent lauscht)
-      if (storedConsentSingleton) {
-        // Nur wenn es schon initialisiert war
-        storedConsentSingleton.value = { ...defaultConsentValues, timestamp: null } // timestamp null, um Neusetzen zu erzwingen
-      }
-      window.dispatchEvent(new CustomEvent('show-cookie-banner'))
+      globalIsBannerOpen.value = true
     }
   }
 
-  const setConsent = (newAnalytics: boolean, newMarketing: boolean) => {
-    if (process.client && storedConsent.value) {
-      // Sicherstellen, dass storedConsent existiert
-      storedConsent.value = {
-        analytics: newAnalytics,
-        marketing: newMarketing,
+  const saveConsent = (options: { analytics: boolean; marketing: boolean }) => {
+    if (process.client && globalStoredConsent) {
+      globalStoredConsent.value = {
+        ...globalStoredConsent.value,
+        analytics: options.analytics,
+        marketing: options.marketing,
         timestamp: Date.now(),
       }
+      globalIsBannerOpen.value = false
+      // Globales Event dispatchen, damit andere Teile der App reagieren können
+      window.dispatchEvent(new CustomEvent('cookieConsentUpdated', { detail: globalStoredConsent.value }));
     }
+  }
+
+  if (process.client) {
+    watch(
+      () => globalStoredConsent?.value,
+      (newValue, oldValue) => {
+        if (newValue && newValue.timestamp !== null && globalIsBannerOpen.value) {
+          globalIsBannerOpen.value = false
+        }
+        // Dispatche Event nur, wenn sich der Wert tatsächlich geändert hat,
+        // um Endlosschleifen bei manchen Browsern/Extensions zu vermeiden
+        if (JSON.stringify(newValue) !== JSON.stringify(oldValue)) {
+            window.dispatchEvent(new CustomEvent('cookieConsentUpdated', { detail: newValue }));
+        }
+      },
+      { deep: true }
+    )
+
+    const handleOpenSettingsEvent = () => {
+      openCookieSettings();
+    }
+    // Event Listener für das Öffnen des Banners von anderen Komponenten, z.B. Footer
+    onMounted(() => {
+        window.addEventListener('openCookieSettingsManual', handleOpenSettingsEvent);
+    });
+    onUnmounted(() => {
+        window.removeEventListener('openCookieSettingsManual', handleOpenSettingsEvent);
+    });
   }
 
   return {
-    hasConsentForAnalytics: computed(() => _consentFlags.value.analytics),
-    hasConsentForMarketing: computed(() => _consentFlags.value.marketing),
-    getConsent: (type: 'analytics' | 'marketing') => {
-      const currentVal =
-        storedConsent.value && typeof storedConsent.value === 'object'
-          ? storedConsent.value
-          : defaultConsentValues
-      return !!currentVal[type]
-    },
+    consentState: readonly(consentState),
+    hasConsentForAnalytics,
+    hasConsentForMarketing,
+    hasAnalyticsConsent: hasConsentForAnalytics, // Alias
+    hasMarketingConsent: hasConsentForMarketing, // Alias
     openCookieSettings,
-    setConsent,
-    _rawStoredConsent: readonly(storedConsent), // Nur lesbar machen für externe Watcher
+    saveConsent,
+    isBannerOpen,
+    _rawStoredConsent: process.client && globalStoredConsent ? readonly(globalStoredConsent) : readonly(ref(defaultConsentValues)),
   }
 }
+export const useConsent = useCookieConsent; // Alias
