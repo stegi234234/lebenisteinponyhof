@@ -144,7 +144,7 @@
         name: `Leben ist ein Ponyhof ${businessAddress.city}`,
         logo: {
           '@type': 'ImageObject',
-          url: `${siteUrl}/images/logo.png`,
+          url: `${siteUrl}/images/logos/favicon.svg`,
         },
       },
       // Die einzelnen blogPosts werden idealerweise über 'hasPart' oder 'blogPost' hier verlinkt,
@@ -251,7 +251,7 @@
       title: `Shetty-Wanderung in ${businessAddress.city}: Naturerlebnis mit Mini-Ponys`,
       date: '2024-09-10', // Beispiel
       excerpt: `Entdecken Sie die malerische Umgebung von ${businessAddress.city} bei einer geführten Wanderung mit unseren charmanten Shetlandponys. Ein Spaß für die ganze Familie!`,
-      previewImage: '/images/shetty-wanderung.jpeg',
+      previewImage: '/images/shetty-wanderung.webp',
       imageAlt: `Familie bei einer Shetty-Wanderung in ${businessAddress.city}`,
       imageWidth: 400,
       imageHeight: 300,

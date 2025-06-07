@@ -132,7 +132,7 @@
       >
         <div class="w-full md:w-1/3 aspect-[4/3] rounded-lg overflow-hidden shadow-sm">
           <NuxtImg
-            src="/images/shetty-wanderung.jpeg"
+            src="/images/shetty-wanderung.webp"
             alt="Fröhliche Kindergruppe bei einer Shetty-Wanderung"
             class="w-full h-full object-cover object-center"
             format="webp"
@@ -340,7 +340,7 @@
       >
         <div class="w-full md:w-1/3 aspect-[4/3] rounded-lg overflow-hidden shadow-sm">
           <NuxtImg
-            src="/images/Einhorn_Pinjata.jpeg" 
+            src="/images/Einhorn_Pinjata.webp"
             alt="Fröhliche Kindergruppe feiert Geburtstag mit Ponys und einer Pinjata"
             class="w-full h-full object-cover object-center"
             quality="80"

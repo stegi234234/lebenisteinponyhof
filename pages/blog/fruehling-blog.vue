@@ -35,10 +35,10 @@
 
       <figure class="my-6 not-prose">
         <NuxtImg
-            src="/images/Napoleon_im_Fellwechsel.png"
+            src="/images/Napoleon_im_Fellwechsel.webp"
             alt="Shetty Napoleon mit deutlichem Fellwechsel im Frühling"
             class="blog-image w-full max-w-xl mx-auto rounded-lg shadow-md cursor-pointer transition-transform duration-300 hover:scale-[1.02]"
-            @click="lightbox.open('/images/Napoleon_im_Fellwechsel.png', 'Napoleon verliert sein Winterfell – überall fliegen die Haare!')"
+            @click="lightbox.open('/images/Napoleon_im_Fellwechsel.webp', 'Napoleon verliert sein Winterfell – überall fliegen die Haare!')"
             loading="lazy" format="webp" quality="75" width="800" height="600" densities="1x 2x"
         />
         <figcaption class="text-center text-xs mt-2 text-gray-500 dark:text-gray-400">Napoleon verliert sein Winterfell – überall fliegen die Haare!</figcaption>
@@ -85,7 +85,7 @@
 
       <figure class="my-6 not-prose">
         <NuxtImg
-            src="/images/Balu_wird_longiert.png"
+            src="/images/Balu_wird_longiert.webp"
             alt="Pferd Balu wird im Frühling longiert"
             class="blog-image w-full max-w-lg mx-auto rounded-lg shadow-md cursor-pointer transition-transform duration-300 hover:scale-[1.02]"
             @click="lightbox.open('/images/Pferde/Balu.webp', 'Balu genießt die ersten längeren Trainingseinheiten im Frühling.')"

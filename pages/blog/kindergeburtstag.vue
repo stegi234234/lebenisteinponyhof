@@ -43,7 +43,7 @@
             )
           "
           loading="eager"
-          format="jpeg"
+          format="webp"
           quality="85"
           width="1200"
           height="800"
@@ -439,7 +439,7 @@
   const businessAddress = config.public.businessAddress
 
   // Bild für den Content der Seite
-  const pageImageForContent = ref(`${siteUrl}/images/Einhorn_Pinjata.png`) // Bleibt für das <NuxtImg src>
+  const pageImageForContent = ref(`${siteUrl}/images/Einhorn_Pinjata.webp`) // Bleibt für das <NuxtImg src>
 
   // --- Daten für SEO Composable ---
   const seoTitle = `Kindergeburtstag Ponyhof ${businessAddress.city} | Ponyreiten & Spiele`
@@ -568,7 +568,7 @@
         'Lasst eurer Kreativität freien Lauf und bemalt unsere geduldigen Ponys mit tierfreundlichen Farben.',
       description:
         'Lasst eurer Kreativität freien Lauf! Mit speziellen, tierfreundlichen Fingerfarben dürfen die Kinder unsere geduldigen Ponys nach Herzenslust bemalen. Ein farbenfrohes Erlebnis, das für tolle Fotos sorgt!\n(Die Farben sind leicht abwaschbar und für die Ponys völlig unbedenklich.)',
-      imageSrc: '/images/Chica-angemalt.jpeg',
+      imageSrc: '/images/Chica-angemalt.webp',
       width: 400,
       height: 400,
       priceInfo: 'Beliebtes Extra!',
@@ -594,7 +594,7 @@
         'Jedes Kind gestaltet sein eigenes Glücks-Hufeisen als tolle Erinnerung an den Geburtstag.',
       description:
         'Jedes Kind gestaltet sein eigenes Glücks-Hufeisen als tolle Erinnerung an den Geburtstag. Mit Farben, Glitzer, Perlen und anderen Dekomaterialien entstehen einzigartige Kunstwerke zum Mitnehmen und Aufhängen.\nAlle Materialien sind inklusive.',
-      imageSrc: '/images/Buntstifte_Hufeisen.jpeg',
+      imageSrc: '/images/Buntstifte_Hufeisen.webp',
       width: 800,
       height: 600,
       priceInfo: 'Material inklusive',
@@ -607,7 +607,7 @@
         'Hex-hex! Wir tauchen ein in die Welt von Bibi & Tina mit passenden Spielen und Dekorationen.',
       description:
         'Hex-hex! Wir tauchen ein in die Welt von Bibi & Tina. Die Spiele, Dekoration und vielleicht sogar die Ponys werden passend zum Motto gestaltet. Ein Muss für alle kleinen Hexen und Pferdefans!\n(Spezifische Wünsche können gerne abgesprochen werden).',
-      imageSrc: '/images/Bibi_und_Tina.png',
+      imageSrc: '/images/Bibi_und_Tina.webp',
       width: 800,
       height: 500,
       priceInfo: 'Auf Anfrage',
@@ -620,7 +620,7 @@
         'Kleine Überraschungstüten für jedes Gastkind als schönes Andenken an die Feier.',
       description:
         'Kleine Überraschungstüten für jedes Gastkind als schönes Andenken an die Feier. Je nach Alter und Interesse der Kinder können die Tüten mit kleinen Pony-Figuren, Stickern, Süßigkeiten oder anderen Kleinigkeiten gefüllt werden.',
-      imageSrc: '/images/Einhorn_Tüte.jpeg',
+      imageSrc: '/images/Einhorn_tuete.webp',
       width: 900,
       height: 1200,
       priceInfo: 'Individuell gestaltbar',
@@ -633,7 +633,7 @@
         'Lehn dich zurück, wir kümmern uns um (fast) alles! Mit passender Dekoration und Überraschungstüten.',
       description:
         'Lehn dich zurück, wir kümmern uns um (fast) alles! Dieses Paket beinhaltet zusätzlich zum Basisprogramm:\n- Thematisch passende Tischdekoration\n- Kleine Überraschungstüten für jedes Gastkind\n- Organisation von Kuchen oder Snacks (nach Absprache, Kosten für Lebensmittel exkl.)\nSo wird der Geburtstag für dich als Elternteil besonders entspannt.',
-      imageSrc: 'images/rundumsorglos.png',
+      imageSrc: 'images/rundumsorglos.wepb',
       width: 800,
       height: 600,
       priceInfo: 'Aufpreis: Bitte anfragen',

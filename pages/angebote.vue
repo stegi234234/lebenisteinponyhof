@@ -117,7 +117,7 @@
       <!-- Angebot: Shetty-Wanderung -->
       <OfferSection
         id="shetty-wanderung"
-        image-src="/images/shetty-wanderung.jpeg"
+        image-src="/images/shetty-wanderung.webp"
         :image-alt="`Familie bei einer Shetty-Wanderung in der Natur um ${businessAddress.city}`"
         :image-width="1200" :image-height="900" image-aspect="aspect-[4/3]"
         icon="fas fa-hiking"
@@ -323,7 +323,7 @@ useMySeoMeta({
       publisher: {
         '@type': 'Organization',
         name: `Leben ist ein Ponyhof ${businessAddress.city}`,
-        logo: { '@type': 'ImageObject', url: `${siteUrl}/images/logos/logo.png` },
+        logo: { '@type': 'ImageObject', url: `${siteUrl}/images/logos/favicon.svg` },
         telephone: config.public.businessAddress.telephone,
         address: {
             '@type': 'PostalAddress',
@@ -340,7 +340,7 @@ useMySeoMeta({
           { '@type': 'ListItem', position: 1, item: baseOfferLd('Reittherapie & Heilpädagogisches Reiten', 'Pferdegestützte Förderung für Kinder (ab 2026)', '/blog/wirkung-reittherapie', undefined, '/images/Pferde/Therapie-mit-Ball.webp') },
           { '@type': 'ListItem', position: 2, item: baseOfferLd('Ponyreiten & Ausritte', 'Sicheres und geführtes Ponyreiten für Kinder', '/blog/ponyreiten', '25', '/images/ponyreiten/Napoleon-mit-Sattel.webp') },
           { '@type': 'ListItem', position: 3, item: baseOfferLd('Pony-Kindergeburtstage', 'Unvergessliche Geburtstagsfeiern mit Ponys', '/blog/kindergeburtstag', '120', '/images/Einhorn_Pinjata.webp') },
-          { '@type': 'ListItem', position: 4, item: baseOfferLd('Shetty-Wanderung', 'Naturabenteuer mit unseren Shetlandponys für die Familie', '/blog/shetty-wanderung', '35', '/images/shetty-wanderung.jpeg') },
+          { '@type': 'ListItem', position: 4, item: baseOfferLd('Shetty-Wanderung', 'Naturabenteuer mit unseren Shetlandponys für die Familie', '/blog/shetty-wanderung', '35', '/images/shetty-wanderung.webp') },
           { '@type': 'ListItem', position: 5, item: baseOfferLd('Zwergen-Wanderung (Mini Zwergen Bande)', 'Erster Ponykontakt für Kinder von 3-6 Jahren', '/blog/zwergen-bande', '30', '/images/mini-zwergenbande.webp') },
           { '@type': 'ListItem', position: 6, item: baseOfferLd('Ferienkurse mit Ponys', 'Spiel, Spaß und Lernen in den Schulferien', '/blog/ferienkurse', '149', '/images/blog/ferienkurse/Basteln_Hufeisen_copy.webp') },
         ],

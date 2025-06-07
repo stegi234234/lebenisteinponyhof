@@ -235,7 +235,7 @@ useMySeoMeta({
     'publisher': {
       '@type': 'Organization',
       'name': `Leben ist ein Ponyhof ${businessAddress.city}`,
-      'logo': { '@type': 'ImageObject', 'url': `${siteUrl}/images/logo.png` }
+      'logo': { '@type': 'ImageObject', 'url': `${siteUrl}/images/logos/favicon.svg` }
     },
     'description': `Ab welchem Alter ist Ponyreiten in ${businessAddress.city} sinnvoll? Erfahren Sie, was Ihr Kind bei uns erwartet und wie wir den ersten Kontakt zum Pony gestalten.`,
     'mainEntityOfPage': { '@type': 'WebPage', '@id': `${siteUrl}${route.fullPath}` },

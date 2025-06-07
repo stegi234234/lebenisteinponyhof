@@ -164,7 +164,7 @@ export const horses = [
         caption: 'Chica, immer neugierig',
       },
       {
-        src: '/images/Chica-angemalt.jpeg',
+        src: '/images/Chica-angemalt.webp',
         alt: 'Shetty Chica bemalt',
         width: 400,
         height: 400,

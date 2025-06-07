@@ -499,7 +499,7 @@
             name: 'Leben ist ein Ponyhof',
             logo: {
               '@type': 'ImageObject',
-              url: `${siteUrl}/images/logo.png`,
+              url: `${siteUrl}/images/logos/favicon.svg`,
             },
           },
           mainEntityOfPage: { '@type': 'WebPage', '@id': currentUrl.value },

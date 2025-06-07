@@ -156,7 +156,7 @@ const slides = ref<Slide[]>([
   },
   {
     id: 'geburtstag-pinata',
-    imageSrc: '/images/Einhorn_Pinjata.png',
+    imageSrc: '/images/Einhorn_Pinjata.webp',
     alt: `Kindergeburtstag mit bunter Einhorn-Piñata auf dem Ponyhof`,
     width: 1200,
     height: 900,

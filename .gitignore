@@ -20,13 +20,9 @@ media-originals/
 assets/
 *.zip
 # GROSSE ORDNER
-public/images/
 public/videos/
-assets/
-media-originals/
 
 # Zips und anderes
-*.zip
 *.webm
 *.mp4
 *.jpeg

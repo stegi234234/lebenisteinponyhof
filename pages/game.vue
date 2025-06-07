@@ -2,454 +2,369 @@
 <template>
   <div>
     <section
-      class="page-header bg-gradient-to-br from-purple-100 to-pink-100 dark:from-gray-800 dark:to-gray-900 py-10"
+        class="page-header bg-gradient-to-br from-amber-100 via-yellow-50 to-green-100 dark:from-gray-800 dark:to-gray-900 py-16 relative overflow-hidden"
     >
-      <h1 class="text-3xl md:text-4xl font-bold mb-2 text-gray-800 dark:text-white">
-        Pony-Sprung-Abenteuer
-      </h1>
-      <p class="text-gray-600 dark:text-gray-400 max-w-xl mx-auto">
-        Hilf unserem Pony, über die Hindernisse zu springen und sammle Sterne!
-      </p>
+      <!-- Floating Particles Background -->
+      <div class="absolute inset-0 overflow-hidden pointer-events-none">
+        <div class="floating-particle" style="left: 10%; animation-delay: 0s;">🐴</div>
+        <div class="floating-particle" style="left: 20%; animation-delay: 2s;">⭐</div>
+        <div class="floating-particle" style="left: 80%; animation-delay: 1s;">🌟</div>
+        <div class="floating-particle" style="left: 90%; animation-delay: 3s;">🦄</div>
+      </div>
+
+      <div class="container mx-auto px-4 text-center relative z-10">
+        <div class="quiz-title-animation">
+          <h1 class="text-4xl md:text-5xl font-bold mb-4 text-gray-800 dark:text-white">
+            🐴 Pferde-Quiz Renningen
+          </h1>
+          <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed">
+            Teste dein Wissen über unsere liebsten Vierbeiner! Erkennst du alle Pferde und weißt, was ein guter Pferdefreund wissen sollte?
+          </p>
+        </div>
+      </div>
     </section>
 
-    <nav aria-label="Breadcrumb" class="breadcrumb">
-      <ol>
-        <li>
-          <NuxtLink to="/">Startseite</NuxtLink>
-        </li>
-        <li aria-current="page">Pony-Sprung-Abenteuer</li>
-      </ol>
+    <nav aria-label="Breadcrumb" class="breadcrumb bg-gray-100 dark:bg-gray-800 py-3 border-b border-gray-200 dark:border-gray-700">
+      <div class="container mx-auto px-4">
+        <ol class="flex items-center text-sm text-gray-600 dark:text-gray-400 space-x-2">
+          <li>
+            <NuxtLink to="/" class="hover:text-primary-color transition-colors flex items-center">
+              <i class="fas fa-home mr-1"></i>
+              Startseite
+            </NuxtLink>
+          </li>
+          <li class="flex items-center">
+            <i class="fas fa-chevron-right text-gray-400 mx-2"></i>
+            <span class="text-gray-800 dark:text-white font-medium">Pferde-Quiz</span>
+          </li>
+        </ol>
+      </div>
     </nav>
 
-    <section class="game-section container mx-auto max-w-3xl px-4 py-8 md:py-12">
-      <div
-        class="bg-white dark:bg-gray-800 p-4 sm:p-6 md:p-8 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700"
-      >
-        <!-- Schwierigkeitsauswahl -->
-        <div v-if="!gameStarted" class="difficulty-selector mb-6">
-          <h3
-            class="text-center text-lg font-semibold mb-3 text-primary-color dark:text-primary-light"
+    <section class="quiz-section container mx-auto max-w-4xl px-4 py-12">
+      <!-- Quiz Mode Selector -->
+      <div v-if="!quizStarted" class="quiz-mode-selector mb-8">
+        <h2 class="text-2xl font-bold text-center mb-6 text-gray-800 dark:text-white">
+          Welches Quiz möchtest du spielen?
+        </h2>
+        <div class="grid md:grid-cols-2 gap-6">
+          <div
+              @click="startQuiz('horse-recognition')"
+              class="quiz-mode-card group bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-100 dark:from-gray-700 dark:to-gray-800 p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 cursor-pointer border-2 border-transparent hover:border-amber-300 dark:hover:border-amber-600 transform hover:-translate-y-2 hover:scale-105"
           >
-            Wähle die Schwierigkeit:
+            <div class="text-center">
+              <div class="text-7xl mb-6 group-hover:animate-bounce transition-transform duration-300 filter drop-shadow-lg">🐎</div>
+              <h3 class="text-2xl font-bold mb-4 text-gray-800 dark:text-white group-hover:text-primary-color transition-colors">
+                Welches Pferd ist das?
+              </h3>
+              <p class="text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
+                Erkenne unsere Hofpferde anhand ihrer einzigartigen Persönlichkeiten und besonderen Eigenarten.
+              </p>
+              <div class="bg-gradient-to-r from-amber-400 to-orange-400 dark:from-amber-600 dark:to-orange-600 text-white px-6 py-3 rounded-full text-sm font-bold shadow-lg group-hover:shadow-xl transition-shadow">
+                {{ horseQuestions.length }} Pferde zu erraten
+              </div>
+            </div>
+          </div>
+
+          <div
+              @click="startQuiz('general')"
+              class="quiz-mode-card group bg-gradient-to-br from-green-50 via-emerald-50 to-blue-100 dark:from-gray-700 dark:to-gray-800 p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 cursor-pointer border-2 border-transparent hover:border-green-300 dark:hover:border-green-600 transform hover:-translate-y-2 hover:scale-105"
+          >
+            <div class="text-center">
+              <div class="text-7xl mb-6 group-hover:animate-bounce transition-transform duration-300 filter drop-shadow-lg">🧠</div>
+              <h3 class="text-2xl font-bold mb-4 text-gray-800 dark:text-white group-hover:text-primary-color transition-colors">
+                Pony-Wissen Quiz
+              </h3>
+              <p class="text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
+                Teste dein Allgemeinwissen über Pferde, Reiten und das Leben auf dem Ponyhof.
+              </p>
+              <div class="bg-gradient-to-r from-green-400 to-blue-400 dark:from-green-600 dark:to-blue-600 text-white px-6 py-3 rounded-full text-sm font-bold shadow-lg group-hover:shadow-xl transition-shadow">
+                {{ generalQuestions.length }} spannende Fragen
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Active Quiz -->
+      <div v-if="quizStarted" class="quiz-container">
+        <!-- Fancy Progress Section -->
+        <div class="progress-section mb-10">
+          <div class="flex justify-between items-center mb-4">
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 bg-gradient-to-r from-primary-color to-secondary-color rounded-full flex items-center justify-center text-white font-bold shadow-lg">
+                {{ currentQuestionIndex + 1 }}
+              </div>
+              <span class="text-lg font-semibold text-gray-700 dark:text-gray-300">
+                von {{ totalQuestions }}
+              </span>
+            </div>
+            <div class="score-display flex items-center space-x-2 bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 px-4 py-2 rounded-full">
+              <i class="fas fa-star text-yellow-500"></i>
+              <span class="text-lg font-bold text-primary-color dark:text-primary-light">
+                {{ score }} Punkte
+              </span>
+            </div>
+          </div>
+
+          <div class="progress-container w-full bg-gray-200 dark:bg-gray-700 rounded-full h-4 overflow-hidden shadow-inner">
+            <div
+                class="progress-bar h-full bg-gradient-to-r from-primary-color via-secondary-color to-accent-gold transition-all duration-700 ease-out relative overflow-hidden"
+                :style="{ width: ((currentQuestionIndex + 1) / totalQuestions) * 100 + '%' }"
+            >
+              <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Enhanced Question Card -->
+        <div v-if="!showResults" class="question-card bg-white dark:bg-gray-800 rounded-3xl shadow-2xl overflow-hidden border border-gray-200 dark:border-gray-700 transform transition-all duration-500 hover:shadow-3xl">
+          <!-- Horse Polaroid Section (Enhanced) -->
+          <div v-if="currentQuizMode === 'horse-recognition'" class="horse-showcase p-8 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-100 dark:from-gray-700 dark:to-gray-800 relative overflow-hidden">
+            <!-- Background Decoration -->
+            <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-purple-200/30 to-pink-200/30 rounded-full -translate-y-1/2 translate-x-1/2 blur-xl"></div>
+            <div class="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-br from-blue-200/30 to-indigo-200/30 rounded-full translate-y-1/2 -translate-x-1/2 blur-xl"></div>
+
+            <div class="horse-polaroid-enhanced mx-auto relative">
+              <div class="polaroid-frame">
+                <div class="polaroid-photo">
+                  <div class="horse-avatar">
+                    <div class="horse-emoji-large">{{ currentQuestion.emoji }}</div>
+                    <div class="horse-pattern-overlay" :class="currentQuestion.pattern"></div>
+                    <div class="shimmer-effect"></div>
+                  </div>
+                </div>
+                <div class="polaroid-text">
+                  <h4 class="horse-name-mystery">Geheimnis-Pferd #{{ currentQuestionIndex + 1 }}</h4>
+                  <p class="horse-description">{{ currentQuestion.description }}</p>
+                </div>
+              </div>
+
+              <!-- Floating Hearts -->
+              <div class="floating-hearts">
+                <div class="heart" style="left: 10%; animation-delay: 0s;">💝</div>
+                <div class="heart" style="left: 80%; animation-delay: 1.5s;">✨</div>
+                <div class="heart" style="left: 90%; animation-delay: 3s;">💕</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Question Content -->
+          <div class="question-content p-8">
+            <div class="text-center mb-8">
+              <h3 class="text-3xl font-bold text-gray-800 dark:text-white mb-6 question-fade-in">
+                {{ currentQuestion.question }}
+              </h3>
+
+              <!-- General Quiz Emoji -->
+              <div v-if="currentQuizMode === 'general' && currentQuestion.emoji" class="text-8xl mb-6 emoji-bounce">
+                {{ currentQuestion.emoji }}
+              </div>
+
+              <!-- Hint -->
+              <div v-if="currentQuestion.hint" class="hint-box bg-gradient-to-r from-yellow-100 to-amber-100 dark:from-yellow-900/30 dark:to-amber-900/30 p-4 rounded-xl border border-yellow-200 dark:border-yellow-700/50 mx-auto max-w-md">
+                <div class="flex items-center justify-center">
+                  <i class="fas fa-lightbulb text-yellow-600 dark:text-yellow-400 mr-2 animate-pulse"></i>
+                  <span class="text-gray-700 dark:text-gray-300 font-medium">{{ currentQuestion.hint }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Enhanced Answer Options -->
+            <div class="answers-grid grid gap-4">
+              <button
+                  v-for="(answer, index) in currentQuestion.answers"
+                  :key="index"
+                  @click="selectAnswer(index)"
+                  :disabled="answerSelected"
+                  :class="[
+                  'answer-btn-enhanced group relative p-6 rounded-2xl border-2 transition-all duration-300 text-left transform hover:scale-105 disabled:hover:scale-100',
+                  getAnswerButtonClass(index)
+                ]"
+              >
+                <!-- Answer Content -->
+                <div class="flex items-center relative z-10">
+                  <div class="answer-letter-enhanced w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold mr-5 shadow-lg transition-all duration-300 group-hover:scale-110">
+                    {{ String.fromCharCode(65 + index) }}
+                  </div>
+                  <div class="flex-grow">
+                    <span class="answer-text-enhanced font-semibold text-lg block transition-colors duration-300">
+                      {{ answer.text }}
+                    </span>
+                  </div>
+                  <div v-if="answer.emoji" class="answer-emoji-enhanced text-3xl transition-transform duration-300 group-hover:scale-125">
+                    {{ answer.emoji }}
+                  </div>
+                </div>
+
+                <!-- Hover Glow Effect -->
+                <div class="absolute inset-0 bg-gradient-to-r from-primary-color/10 to-secondary-color/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+                <!-- Selection Indicator -->
+                <div v-if="answerSelected && selectedAnswer === index" class="selection-pulse absolute inset-0 rounded-2xl"></div>
+              </button>
+            </div>
+
+            <!-- Enhanced Next Button -->
+            <div v-if="answerSelected" class="text-center mt-10">
+              <button
+                  @click="nextQuestion"
+                  class="next-btn-enhanced group px-10 py-4 bg-gradient-to-r from-primary-color to-secondary-color text-white font-bold text-lg rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 relative overflow-hidden"
+              >
+                <span class="relative z-10 flex items-center">
+                  {{ currentQuestionIndex < totalQuestions - 1 ? 'Nächste Frage' : 'Ergebnis anzeigen' }}
+                  <i class="fas fa-arrow-right ml-3 transition-transform duration-300 group-hover:translate-x-1"></i>
+                </span>
+                <div class="absolute inset-0 bg-gradient-to-r from-secondary-color to-accent-gold opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Enhanced Results -->
+        <div v-if="showResults" class="results-container">
+          <div class="results-card-enhanced bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-10 text-center border border-gray-200 dark:border-gray-700 relative overflow-hidden">
+            <!-- Background Celebration -->
+            <div class="celebration-bg absolute inset-0 opacity-10">
+              <div class="confetti-piece" style="left: 10%; top: 20%; animation-delay: 0s;">🎉</div>
+              <div class="confetti-piece" style="left: 80%; top: 30%; animation-delay: 0.5s;">✨</div>
+              <div class="confetti-piece" style="left: 20%; top: 70%; animation-delay: 1s;">🌟</div>
+              <div class="confetti-piece" style="left: 90%; top: 80%; animation-delay: 1.5s;">🎊</div>
+            </div>
+
+            <div class="relative z-10">
+              <div class="results-icon-enhanced text-9xl mb-8 animate-bounce-slow">{{ getResultsEmoji() }}</div>
+
+              <h2 class="text-4xl font-bold mb-6 text-gray-800 dark:text-white">
+                {{ getResultsTitle() }}
+              </h2>
+
+              <div class="score-display-enhanced mb-10">
+                <div class="text-8xl font-bold bg-gradient-to-r from-primary-color to-secondary-color bg-clip-text text-transparent mb-4 animate-pulse-gentle">
+                  {{ score }}
+                </div>
+                <div class="text-xl text-gray-600 dark:text-gray-400 mb-2">
+                  von {{ totalQuestions * 10 }} Punkten
+                </div>
+                <div class="text-lg text-gray-600 dark:text-gray-400">
+                  {{ correctAnswers }} von {{ totalQuestions }} Fragen richtig
+                </div>
+
+                <!-- Achievement Badges -->
+                <div class="achievement-badges flex justify-center space-x-4 mt-6">
+                  <div v-if="correctAnswers === totalQuestions" class="badge perfect-score">
+                    <i class="fas fa-crown text-yellow-500"></i>
+                    <span>Perfekt!</span>
+                  </div>
+                  <div v-if="correctAnswers >= totalQuestions * 0.8" class="badge high-score">
+                    <i class="fas fa-star text-yellow-500"></i>
+                    <span>Experte</span>
+                  </div>
+                  <div v-if="currentQuizMode === 'horse-recognition'" class="badge horse-expert">
+                    <i class="fas fa-horse text-amber-600"></i>
+                    <span>Pferdekenner</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="results-message-enhanced mb-10 p-8 bg-gradient-to-r from-gray-50 to-blue-50 dark:from-gray-700 dark:to-gray-800 rounded-2xl border border-gray-200 dark:border-gray-600">
+                <p class="text-xl text-gray-700 dark:text-gray-300 leading-relaxed">
+                  {{ getResultsMessage() }}
+                </p>
+              </div>
+
+              <div class="results-actions space-y-4">
+                <button
+                    @click="restartQuiz"
+                    class="action-btn-enhanced w-full sm:w-auto px-10 py-4 bg-gradient-to-r from-primary-color to-secondary-color text-white font-bold text-lg rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
+                >
+                  <i class="fas fa-redo mr-3"></i>
+                  Nochmal spielen
+                </button>
+                <button
+                    @click="changeQuizMode"
+                    class="action-btn-enhanced w-full sm:w-auto px-10 py-4 bg-gradient-to-r from-green-500 to-blue-500 text-white font-bold text-lg rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 ml-0 sm:ml-4"
+                >
+                  <i class="fas fa-exchange-alt mr-3"></i>
+                  Anderes Quiz spielen
+                </button>
+              </div>
+
+              <!-- Enhanced Share Section -->
+              <div class="share-section-enhanced mt-10 pt-8 border-t border-gray-200 dark:border-gray-700">
+                <p class="text-sm text-gray-600 dark:text-gray-400 mb-6 font-medium">Teile dein Ergebnis:</p>
+                <div class="flex justify-center space-x-4">
+                  <button
+                      @click="shareResult('whatsapp')"
+                      class="share-btn-enhanced bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+                  >
+                    <i class="fab fa-whatsapp mr-2 text-lg"></i>
+                    WhatsApp
+                  </button>
+                  <button
+                      @click="shareResult('copy')"
+                      class="share-btn-enhanced bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+                  >
+                    <i class="fas fa-copy mr-2"></i>
+                    Link kopieren
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Enhanced Info Section -->
+      <div class="quiz-info-enhanced mt-16 grid md:grid-cols-2 gap-8">
+        <div class="info-card-enhanced bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 transform hover:-translate-y-2 transition-all duration-300">
+          <h3 class="text-2xl font-bold mb-6 text-gray-800 dark:text-white flex items-center">
+            <div class="w-12 h-12 bg-gradient-to-r from-primary-color to-secondary-color rounded-full flex items-center justify-center mr-4">
+              <i class="fas fa-info-circle text-white"></i>
+            </div>
+            Über unsere Pferde
           </h3>
-          <div class="flex justify-center gap-3">
-            <button
-              @click="selectDifficulty('easy')"
-              :class="[
-                'px-4 py-2 rounded-md text-white transition-all',
-                difficulty === 'easy'
-                  ? 'bg-green-500 scale-110 shadow-md'
-                  : 'bg-green-400 hover:bg-green-500',
-              ]"
-            >
-              <i class="fas fa-smile mr-1"></i> Leicht
-            </button>
-            <button
-              @click="selectDifficulty('medium')"
-              :class="[
-                'px-4 py-2 rounded-md text-white transition-all',
-                difficulty === 'medium'
-                  ? 'bg-blue-500 scale-110 shadow-md'
-                  : 'bg-blue-400 hover:bg-blue-500',
-              ]"
-            >
-              <i class="fas fa-meh mr-1"></i> Mittel
-            </button>
-            <button
-              @click="selectDifficulty('hard')"
-              :class="[
-                'px-4 py-2 rounded-md text-white transition-all',
-                difficulty === 'hard'
-                  ? 'bg-red-500 scale-110 shadow-md'
-                  : 'bg-red-400 hover:bg-red-500',
-              ]"
-            >
-              <i class="fas fa-grimace mr-1"></i> Schwer
-            </button>
-          </div>
+          <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+            Lerne unsere wundervollen Hofpferde kennen! Jedes Pferd hat seinen eigenen Charakter und besondere Eigenschaften.
+            Von sanften Shetlandponys bis hin zu majestätischen größeren Pferden - bei uns findest du den perfekten Reitpartner.
+          </p>
         </div>
 
-        <div
-          class="tutorial-section mb-6 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-200 dark:border-gray-600"
-        >
-          <h2
-            class="text-lg font-semibold mb-2 text-primary-color dark:text-primary-light text-center"
-          >
-            So spielst du:
-          </h2>
-          <div
-            class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-gray-700 dark:text-gray-300"
-          >
-            <div class="flex items-center">
-              <div class="mr-2 w-10 text-center text-xl">⌨️</div>
-              <div>
-                Drücke <strong class="font-bold">Leertaste</strong> oder
-                <strong class="font-bold">tippe/klicke</strong> zum Springen
-              </div>
+        <div class="info-card-enhanced bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 transform hover:-translate-y-2 transition-all duration-300">
+          <h3 class="text-2xl font-bold mb-6 text-gray-800 dark:text-white flex items-center">
+            <div class="w-12 h-12 bg-gradient-to-r from-red-400 to-pink-500 rounded-full flex items-center justify-center mr-4">
+              <i class="fas fa-heart text-white"></i>
             </div>
-            <div class="flex items-center">
-              <div>Weiche verschiedenen Hindernissen aus!</div>
-            </div>
-            <div class="flex items-center">
-              <div><strong>Rote Hindernisse</strong> bewegen sich auf und ab</div>
-            </div>
-            <div class="flex items-center">
-              <div class="mr-2 w-10 text-center text-xl">⚡</div>
-              <div><strong>Gelbe Hindernisse</strong> sind breiter und schneller</div>
-            </div>
-            <div class="flex items-center">
-              <div class="mr-2 w-10 text-center text-xl">*</div>
-              <div>Sammle Sterne für <strong>50</strong> Punkte</div>
-            </div>
-            <div class="flex items-center">
-              <div>Sammle Karotten für <strong>25</strong> Punkte</div>
-            </div>
-            <div class="flex items-center">
-              <div>Kleeblatt ermöglicht <strong>Doppelsprung</strong></div>
-            </div>
-            <div class="flex items-center">
-              <div class="mr-2 w-10 text-center text-xl">❤️</div>
-              <div>Herzen geben dir ein <strong>zusätzliches Leben</strong></div>
-            </div>
-          </div>
-          <div
-            v-if="isPaused"
-            class="mt-3 p-2 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg text-center text-xs"
-          >
-            <strong>Spiel pausiert!</strong> Klicke auf "Weiterspielen", um fortzufahren.
-          </div>
+            Pferdewissen
+          </h3>
+          <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+            Erweitere dein Wissen rund um Pferde, Reitsport und die Pflege unserer vierbeinigen Freunde.
+            Unser Quiz hilft dir dabei, mehr über die faszinierende Welt der Pferde zu erfahren.
+          </p>
+        </div>
+      </div>
+
+      <!-- Enhanced Call to Action -->
+      <div class="cta-section-enhanced mt-16 text-center bg-gradient-to-r from-primary-color/10 via-secondary-color/10 to-accent-gold/10 dark:from-primary-color/20 dark:via-secondary-color/20 dark:to-accent-gold/20 p-10 rounded-3xl border border-primary-color/20 dark:border-primary-color/30 relative overflow-hidden">
+        <!-- Background Pattern -->
+        <div class="absolute inset-0 opacity-5">
+          <div class="bg-pattern w-full h-full"></div>
         </div>
 
-        <div
-          class="game-stats flex flex-wrap justify-around items-center mb-4 p-3 bg-gray-100 dark:bg-gray-700 rounded-md text-sm font-medium"
-        >
-          <div>
-            Punkte:
-            <span class="font-bold text-primary-color dark:text-primary-light">{{ score }}</span>
-          </div>
-          <div>
-            Highscore: <span class="font-bold">{{ highscore }}</span>
-          </div>
-          <div>
-            Level: <span class="font-bold text-purple-500">{{ currentLevel }}</span>
-          </div>
-          <div>
-            Leben:
-            <span class="font-bold text-red-500">
-              <span v-for="n in lives" :key="n" class="text-red-400 text-lg mx-[1px]">❤️</span>
-            </span>
-          </div>
-          <div v-if="doubleJumpActive">
-            PowerUp: <span class="text-green-500 text-lg">🍀</span>
-            <span class="text-xs text-green-600"
-            >({{ Math.ceil(doubleJumpTimeLeft / 1000) }}s)</span
-            >
-          </div>
-          <!-- Pause Button -->
-          <button
-            v-if="gameRunning && !gameOver"
-            @click.stop="togglePause"
-            class="ml-2 text-gray-600 dark:text-gray-300 hover:text-primary-color dark:hover:text-primary-light focus:outline-none"
-            title="Pause/Weiterspielen"
+        <div class="relative z-10">
+          <h3 class="text-3xl font-bold mb-6 text-gray-800 dark:text-white">
+            Lust auf echtes Ponyreiten? 🐴
+          </h3>
+          <p class="text-gray-600 dark:text-gray-400 mb-8 max-w-2xl mx-auto text-lg leading-relaxed">
+            Nach dem Quiz kannst du unsere Pferde auch live erleben! Buche eine Reitstunde oder einen unvergesslichen Kindergeburtstag bei uns in Renningen.
+          </p>
+          <NuxtLink
+              to="/angebote"
+              class="cta-button-enhanced inline-flex items-center px-10 py-4 bg-gradient-to-r from-primary-color to-secondary-color text-white font-bold text-lg rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
           >
-            <i :class="isPaused ? 'fas fa-play' : 'fas fa-pause'" class="text-lg"></i>
-          </button>
-        </div>
-
-        <div
-          ref="gameArea"
-          id="gameArea"
-          :tabindex="gameRunning && !gameOver && !isPaused ? 0 : -1"
-          class="game-canvas-container relative w-full h-60 sm:h-72 bg-gradient-to-b from-blue-100 to-blue-200 dark:from-blue-900 dark:to-blue-800 border-2 border-blue-300 dark:border-blue-600 rounded-lg overflow-hidden shadow-inner cursor-pointer select-none flex items-end"
-          @click="handleGameAreaClick"
-          @keydown.space.prevent="handleGameAreaSpaceKey"
-        >
-          <!-- Neutraler Hintergrund -->
-          <div
-            class="absolute inset-0 bg-gradient-to-b from-blue-100 to-blue-200 dark:from-blue-900 dark:to-blue-800"
-          ></div>
-
-          <!-- Dynamischer Boden -->
-          <div
-            class="absolute bottom-0 left-0 right-0 h-1 transition-colors duration-500"
-            :class="currentLevel <= 2 ? 'bg-green-400 dark:bg-green-600' :
-                    currentLevel <= 4 ? 'bg-yellow-400 dark:bg-yellow-600' :
-                    'bg-red-400 dark:bg-red-600'"
-          ></div>
-
-          <!-- Pony Element -->
-          <div
-            ref="ponyElement"
-            :class="[
-              'pony absolute bottom-1 left-5 transition-all duration-200 ease-out z-10',
-              ponyVisual.widthClass,
-              ponyVisual.heightClass,
-              { 'invulnerable-flash': isInvulnerable },
-            ]"
-            :style="{
-              transform: `translateY(${pony.y}px) ${ponyRotation}`,
-              filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.3))',
-            }"
-          >
-            <NuxtImg
-              v-if="!useEmoji.pony && PONY_IMG_NORMAL_SRC"
-              :src="ponyVisual.imageSrc"
-              alt="Spiel-Pony"
-              class="w-full h-full object-contain"
-              format="png" densities="1x"
-              :width="PONY_COLLISION_WIDTH_BASE" :height="PONY_COLLISION_HEIGHT_BASE"
-              placeholder
-            @error="onImageError('pony')"
-            loading="eager"
-            />
-
-            <div
-              v-else
-              class="text-center text-4xl sm:text-5xl w-full h-full flex items-center justify-center"
-              style="filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.5));"
-            >
-              {{ ponyVisual.emoji }}
-            </div>
-          </div>
-
-          <!-- Dynamische Hindernisse -->
-          <div
-            v-for="obstacle in obstacles"
-            :key="obstacle.id"
-            :class="[
-              'obstacle absolute bottom-1 flex items-end justify-center z-5 transition-all duration-100',
-              obstacle.type === 'moving' ? 'animate-bounce-obstacle' : '',
-              obstacle.type === 'fast' ? 'fast-obstacle' : '',
-            ]"
-            :style="{
-              left: obstacle.x + 'px',
-              height: obstacle.height + 'px',
-              width: obstacle.width + 'px',
-              filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.3))',
-              transform: obstacle.type === 'moving' ? `translateY(${obstacle.moveOffset || 0}px)` : 'none',
-              borderRadius: obstacle.type === 'fast' ? '8px' : '0px',
-            }"
-          >
-            <!-- Verschiedene Hindernistypen -->
-            <div v-if="useEmoji.tree || !OBSTACLE_IMG_SRC"
-                 class="text-center w-full h-full flex items-center justify-center"
-                 :class="obstacle.type === 'moving' ? 'text-red-500' : obstacle.type === 'fast' ? 'text-yellow-500' : ''"
-                 style="filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.5));">
-              {{ obstacle.type === 'moving' ? '🔥' : obstacle.type === 'fast' ? '⚡' : '🌲' }}
-            </div>
-            <div v-else
-                 class="w-full h-full flex items-center justify-center relative"
-                 :style="{
-                   backgroundColor: obstacle.type === 'moving' ? 'rgba(239, 68, 68, 0.8)' :
-                                   obstacle.type === 'fast' ? 'rgba(245, 158, 11, 0.8)' :
-                                   'rgba(34, 197, 94, 0.8)',
-                 }">
-              <NuxtImg
-                :src="OBSTACLE_IMG_SRC"
-                alt="Hindernis"
-                class="w-full h-auto max-h-full object-contain opacity-80"
-                format="png"
-                densities="1x"
-                :width="obstacle.width"
-                :height="obstacle.height"
-                @error="onImageError('tree')"
-              />
-            </div>
-          </div>
-
-          <!-- Sammelobjekte -->
-          <div
-            v-for="item in collectibles"
-            :key="item.id"
-            :class="[
-              'collectible absolute flex items-center justify-center z-5',
-              item.type === 'star' ? 'animate-pulse-glow' : '',
-              item.type === 'powerup' || item.type === 'heart' ? 'animate-bounce-smooth' : '',
-              item.type === 'carrot' ? 'animate-gentle-bob' : '',
-            ]"
-            :style="{
-              left: `${item.x}px`,
-              bottom: `${item.y}px`,
-              width: `${item.size}px`,
-              height: `${item.size}px`,
-              filter: 'drop-shadow(1px 1px 3px rgba(0,0,0,0.4))',
-            }"
-          >
-            <NuxtImg
-              v-if="!useEmoji.collectibles && item.type === 'star'"
-              :src="STAR_IMG_SRC"
-              alt="Stern"
-              class="w-full h-full object-contain"
-              format="png"
-              densities="1x"
-              :width="item.size"
-              :height="item.size"
-              @error="onImageError('collectibles')"
-            />
-            <NuxtImg
-              v-else-if="!useEmoji.collectibles && item.type === 'carrot'"
-              :src="CARROT_IMG_SRC"
-              alt="Karotte"
-              class="w-full h-full object-contain"
-              format="png"
-              densities="1x"
-              :width="item.size"
-              :height="item.size"
-              @error="onImageError('collectibles')"
-            />
-            <div
-              v-else
-              :class="item.type === 'star' ? 'text-4xl sm:text-5xl' : 'text-2xl sm:text-3xl'"
-            >
-              {{
-                item.type === 'star'
-                  ? '⭐'
-                  : item.type === 'carrot'
-                    ? '🥕'
-                    : item.type === 'heart'
-                      ? '❤️'
-                      : '🍀'
-              }}
-            </div>
-          </div>
-
-          <!-- Level-Up Benachrichtigung -->
-          <transition name="level-up">
-            <div
-              v-if="showLevelUp"
-              class="absolute inset-0 flex items-center justify-center z-25 pointer-events-none"
-            >
-              <div class="level-up-notification bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-4 rounded-lg text-2xl font-bold shadow-2xl transform scale-110">
-                🎉 Level {{ currentLevel }}! 🎉
-              </div>
-            </div>
-          </transition>
-
-          <!-- Punkteanzeige für gesammelte Items -->
-          <transition-group name="point-popup">
-            <div
-              v-for="popup in pointPopups"
-              :key="popup.id"
-              class="point-popup absolute z-20 font-bold text-white text-shadow-strong"
-              :class="popup.color"
-              :style="{
-                left: `${popup.x}px`,
-                bottom: `${popup.y}px`,
-              }"
-            >
-              {{ popup.text }}
-            </div>
-          </transition-group>
-
-          <!-- Partikel-Effekte -->
-          <transition-group name="particle">
-            <div
-              v-for="particle in jumpParticles"
-              :key="particle.id"
-              class="particle absolute z-5 pointer-events-none"
-              :style="{
-                left: `${particle.x}px`,
-                bottom: `${particle.y}px`,
-                transform: `scale(${particle.scale})`,
-                opacity: particle.opacity,
-              }"
-            >
-              ✨
-            </div>
-          </transition-group>
-
-          <!-- Countdown Overlay -->
-          <div
-            v-if="countdown > 0 && !isPaused && !gameOver"
-            class="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-20"
-          >
-            <div class="countdown-number text-7xl font-bold text-white animate-pulse-scale">
-              {{ countdown }}
-            </div>
-          </div>
-
-          <!-- Spiel Start / Game Over / Pause Overlay -->
-          <div
-            v-if="(!gameRunning && !countdown) || gameOver || (isPaused && !countdown)"
-            class="absolute inset-0 flex flex-col items-center justify-center bg-black/60 backdrop-blur-sm text-white p-4 z-20"
-          >
-            <h2 v-if="gameOver" class="text-3xl font-bold mb-2">Game Over!</h2>
-            <p v-if="gameOver" class="mb-4 text-lg">Dein Score: {{ score }}</p>
-            <p v-if="gameOver" class="mb-4 text-md">Level erreicht: {{ currentLevel }}</p>
-            <p v-if="gameOver && score === highscore && score > 0" class="mb-4 text-yellow-400 font-bold">🎉 Neuer Highscore! 🎉</p>
-
-            <button
-              v-if="gameOver || !gameStarted"
-              @click.stop="startGame"
-              class="px-8 py-3 bg-gradient-primary text-white font-semibold rounded-lg shadow-md hover:opacity-90 transition-opacity text-xl focus:outline-none focus:ring-2 focus:ring-white/50"
-            >
-              {{ gameOver ? 'Nochmal spielen' : 'Spiel starten' }}
-            </button>
-
-            <button
-              v-if="isPaused && !gameOver"
-              @click.stop="resumeGame"
-              class="px-8 py-3 bg-gradient-primary text-white font-semibold rounded-lg shadow-md hover:opacity-90 transition-opacity text-xl focus:outline-none focus:ring-2 focus:ring-white/50"
-            >
-              Weiterspielen
-            </button>
-
-            <p v-if="!gameRunning && !gameOver && !gameStarted" class="mt-4 text-sm opacity-80">
-              Klicke oder drücke Leertaste zum Starten!
-            </p>
-          </div>
-        </div>
-        <p class="text-center text-xs text-gray-500 dark:text-gray-400 mt-3">
-          Tippe auf den Spielbereich oder drücke Leertaste zum Springen.
-        </p>
-
-        <!-- Anzeigetafel mit Tipps und Erfolgen -->
-        <div v-if="gameStarted" class="mt-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg text-sm">
-          <h3 class="font-semibold mb-2 text-center">Spielerfolge</h3>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            <div class="flex items-center">
-              <i class="fas fa-trophy text-yellow-500 mr-2"></i>
-              <span>Höchste Punktzahl: {{ highscore }}</span>
-            </div>
-            <div class="flex items-center">
-              <i class="fas fa-star text-yellow-500 mr-2"></i>
-              <span>Sterne gesammelt: {{ starsCollected }}</span>
-            </div>
-            <div class="flex items-center">
-              <i class="fas fa-carrot text-orange-500 mr-2"></i>
-              <span>Karotten gesammelt: {{ carrotsCollected }}</span>
-            </div>
-            <div class="flex items-center">
-              <i class="fas fa-tree text-green-500 mr-2"></i>
-              <span>Hindernisse übersprungen: {{ obstaclesJumped }}</span>
-            </div>
-          </div>
-
-          <div
-            v-if="gameRunning && !gameOver"
-            class="mt-3 text-xs text-gray-500 dark:text-gray-400 text-center"
-          >
-            <p v-if="currentLevel === 1" class="text-green-500 dark:text-green-400">
-              <i class="fas fa-info-circle mr-1"></i>
-              Level 1: Einfache grüne Hindernisse
-            </p>
-            <p v-else-if="currentLevel === 2" class="text-yellow-500 dark:text-yellow-400">
-              <i class="fas fa-info-circle mr-1"></i>
-              Level 2: Erste bewegliche Hindernisse erscheinen!
-            </p>
-            <p v-else-if="currentLevel === 3" class="text-orange-500 dark:text-orange-400">
-              <i class="fas fa-info-circle mr-1"></i>
-              Level 3: Schnelle gelbe Hindernisse kommen dazu!
-            </p>
-            <p v-else-if="currentLevel === 4" class="text-red-500 dark:text-red-400">
-              <i class="fas fa-info-circle mr-1"></i>
-              Level 4: Alles wird schneller und chaotischer!
-            </p>
-            <p v-else class="text-purple-500 dark:text-purple-400">
-              <i class="fas fa-fire mr-1"></i>
-              Level {{ currentLevel }}: Meister-Modus! Du bist ein Profi!
-            </p>
-          </div>
+            <i class="fas fa-calendar-plus mr-3"></i>
+            Jetzt Termin buchen
+          </NuxtLink>
         </div>
       </div>
     </section>
@@ -457,1024 +372,1062 @@
 </template>
 
 <script setup>
-import { NuxtLink, NuxtImg } from '#components'; // NuxtImg hier explizit, da in <template> verwendet
-// import { useHead } from '#app'; // ENTFERNEN
-import { useMySeoMeta } from '~/composables/useMySeoMeta'; // HINZUFÜGEN
-import { ref, onMounted, onUnmounted, computed } from 'vue';
-import { useLocalStorage } from '@vueuse/core';
-import { useRuntimeConfig } from '#app'; // HINZUGEFÜGT für siteUrl
+import { ref, computed, onMounted } from 'vue'
+import { useHead } from '#app'
 
-const config = useRuntimeConfig();
-const siteUrl = config.public.siteUrl;
-const businessAddress = config.public.businessAddress;
-
-
-// SEO Meta-Daten mit useMySeoMeta
-useMySeoMeta({
-  title: `Pony-Sprung-Abenteuer Spiel | Ponyhof ${businessAddress.city}`,
-  description: `Spiele unser lustiges Pony-Sprung-Abenteuer! Hilf dem Pony beim Ponyreiten über Hindernisse in ${businessAddress.city} und sammle Punkte.`,
-  keywords: [
-    `Pony Spiel ${businessAddress.city}`,
-    `Pferdespiel Kinder ${businessAddress.city}`,
-    `Jump and Run Pony`,
-    `Browsergame Ponyhof ${businessAddress.city}`,
-    'Online Spiel Pferde',
+useHead({
+  title: 'Pferde-Quiz Renningen | Erkenne unsere Hofpferde | Leben ist ein Ponyhof',
+  meta: [
+    {
+      name: 'description',
+      content: 'Spiele unser interaktives Pferde-Quiz! Erkenne unsere Hofpferde Simon, Balu, Napoleon, Coco, Chica, Fiona und teste dein Pony-Wissen. Perfekt für Kinder und Pferdeliebhaber in Renningen und Umgebung.'
+    },
+    {
+      name: 'keywords',
+      content: 'Pferde Quiz Renningen, Ponyhof Quiz, Simon Balu Napoleon, Coco Chica Fiona Quiz, Pferdefreunde Renningen, Kinder Quiz Pferde, Shetlandpony Tinker Quiz, Reiterhof Spiel'
+    },
+    { property: 'og:title', content: 'Pferde-Quiz Renningen | Leben ist ein Ponyhof' },
+    {
+      property: 'og:description',
+      content: 'Teste dein Pferdewissen! Erkenne unsere Hofpferde Simon, Balu, Napoleon, Coco, Chica, Fiona und lerne spielerisch alles über Ponys und Reiten.'
+    },
+    { property: 'og:type', content: 'website' },
+    { property: 'og:url', content: 'https://lebenisteinponyhof.de/game' },
+    { property: 'og:image', content: 'https://lebenisteinponyhof.de/images/og-pferde-quiz.webp' },
+    { name: 'twitter:card', content: 'summary_large_image' },
+    { name: 'twitter:title', content: 'Pferde-Quiz Renningen - Leben ist ein Ponyhof' },
+    {
+      name: 'twitter:description',
+      content: 'Spiele unser interaktives Pferde-Quiz und teste dein Wissen über unsere Hofpferde Simon, Balu, Napoleon, Coco, Chica und Fiona!'
+    }
   ],
-  ogImage: `${siteUrl}/images/og-pony-spiel-renningen.webp`, // Spezifisches OG Bild für das Spiel erstellen!
-  ogImageAlt: `Pony-Sprung-Abenteuer Spiel vom Ponyhof in ${businessAddress.city}`,
-  ogType: 'article', // 'article' passt gut für eine Spieleseite, da es spezifischer Inhalt ist
-  articleDetails: { // Optionale Artikeldetails, wenn du es als eine Art "Produkt"-Seite siehst
-    // publishedTime: '2024-01-01T10:00:00+01:00', // Ein fiktives Veröffentlichungsdatum
-    // authorName: 'Leben ist ein Ponyhof Team',
-    section: 'Spiele',
-  }
-  // Optional: LD+JSON für SoftwareApplication, wenn du es sehr detailliert machen willst.
-  // Für ein einfaches Spiel ist das aber oft Overkill. Das Article-Schema reicht.
-});
-
-// --- Asset Pfade & Konfiguration ---
-const PONY_IMG_NORMAL_SRC = '/images/kenney/pony.png'
-const PONY_IMG_HIT_SRC = '/images/kenney/pony-hit.png'
-const OBSTACLE_IMG_SRC = '/images/kenney/tree.png'
-const STAR_IMG_SRC = '/images/kenney/star.png'
-const CARROT_IMG_SRC = '/images/kenney/carrot.png'
-
-const useEmoji = ref({ pony: false, tree: false, collectibles: false })
-const onImageError = (type) => {
-  console.warn(
-    `Spiel: Bild für Typ "${type}" konnte nicht geladen werden. Fallback zu Emoji aktiviert.`
-  )
-  if (useEmoji.value.hasOwnProperty(type)) {
-    useEmoji.value[type] = true
-  }
-}
-
-// --- Schwierigkeitseinstellungen ---
-const difficulty = ref('easy')
-const difficultySettings = {
-  easy: {
-    baseObstacleSpeed: 3.0,
-    jumpPower: 20,
-    baseObstacleSpawnTime: 2800,
-    collectibleSpawnTime: 2500,
-    powerupSpawnTime: 12000,
-    heartSpawnTime: 20000,
-    obstacleHeightMax: 45,
-    gravity: 0.7,
-    speedIncreaseRate: 0.1,
-    levelUpThreshold: 300,
-  },
-  medium: {
-    baseObstacleSpeed: 3.8,
-    jumpPower: 18,
-    baseObstacleSpawnTime: 2400,
-    collectibleSpawnTime: 2700,
-    powerupSpawnTime: 15000,
-    heartSpawnTime: 30000,
-    obstacleHeightMax: 50,
-    gravity: 0.8,
-    speedIncreaseRate: 0.15,
-    levelUpThreshold: 250,
-  },
-  hard: {
-    baseObstacleSpeed: 4.5,
-    jumpPower: 18,
-    baseObstacleSpawnTime: 2200,
-    collectibleSpawnTime: 2700,
-    powerupSpawnTime: 18000,
-    heartSpawnTime: 45000,
-    obstacleHeightMax: 55,
-    gravity: 0.9,
-    speedIncreaseRate: 0.2,
-    levelUpThreshold: 200,
-  },
-}
-
-const selectDifficulty = (level) => {
-  difficulty.value = level
-}
-
-// --- Dynamische Schwierigkeit ---
-const currentLevel = ref(1)
-const showLevelUp = ref(false)
-
-const currentSpeed = computed(() => {
-  const baseSpeed = difficultySettings[difficulty.value].baseObstacleSpeed
-  const speedIncrease = difficultySettings[difficulty.value].speedIncreaseRate
-  return baseSpeed + (currentLevel.value - 1) * speedIncrease
+  link: [{ rel: 'canonical', href: 'https://lebenisteinponyhof.de/game' }],
+  script: [
+    {
+      type: 'application/ld+json',
+      innerHTML: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'Game',
+        name: 'Pferde-Quiz Renningen',
+        description: 'Interaktives Quiz zum Erkennen von Hofpferden Simon, Balu, Napoleon, Coco, Chica, Fiona und Testen des Pferdewissens',
+        url: 'https://lebenisteinponyhof.de/game',
+        publisher: {
+          '@type': 'Organization',
+          name: 'Leben ist ein Ponyhof Renningen',
+          url: 'https://lebenisteinponyhof.de'
+        },
+        genre: 'Educational Game',
+        audience: {
+          '@type': 'Audience',
+          audienceType: 'Children and Horse Lovers'
+        },
+        about: [
+          { '@type': 'Thing', name: 'Simon Pferd' },
+          { '@type': 'Thing', name: 'Balu Pferd' },
+          { '@type': 'Thing', name: 'Napoleon Shetlandpony' },
+          { '@type': 'Thing', name: 'Coco Shetlandpony' },
+          { '@type': 'Thing', name: 'Chica Shetlandpony' },
+          { '@type': 'Thing', name: 'Fiona Tinker' }
+        ]
+      })
+    }
+  ]
 })
 
-const currentObstacleSpawnTime = computed(() => {
-  const baseTime = difficultySettings[difficulty.value].baseObstacleSpawnTime
-  return Math.max(1500, baseTime - (currentLevel.value - 1) * 200)
-})
-
-// --- Kollisionsgrößen ---
-const PONY_COLLISION_WIDTH_BASE = 48
-const PONY_COLLISION_HEIGHT_BASE = 48
-const OBSTACLE_COLLISION_WIDTH = 35
-const OBSTACLE_COLLISION_HEIGHT_MIN = 35
-const OBSTACLE_COLLISION_HEIGHT_MAX = computed(
-  () => difficultySettings[difficulty.value].obstacleHeightMax
-)
-const STAR_COLLECTIBLE_SIZE = 40
-const CARROT_COLLECTIBLE_SIZE = 30
-const POWERUP_COLLECTIBLE_SIZE = 35
-const HEART_COLLECTIBLE_SIZE = 35
-
-// --- Anzeigegrößen ---
-const PONY_DISPLAY_WIDTH_CLASS = 'w-12'
-const PONY_DISPLAY_HEIGHT_CLASS = 'h-12'
-
-// --- Refs & Spielzustand ---
-const gameArea = ref(null)
-const ponyElement = ref(null)
-
+// Quiz State
+const quizStarted = ref(false)
+const currentQuizMode = ref('')
+const currentQuestionIndex = ref(0)
 const score = ref(0)
-const highscore = useLocalStorage('ponyGameHighscore_v7', 0)
-const lives = ref(3)
+const correctAnswers = ref(0)
+const selectedAnswer = ref(null)
+const answerSelected = ref(false)
+const showResults = ref(false)
 
-// Spielflow-Status
-const gameStarted = ref(false)
-const gameRunning = ref(false)
-const gameOver = ref(false)
-const isPaused = ref(false)
-const countdown = ref(0)
-
-// Statistik-Tracking
-const starsCollected = ref(0)
-const carrotsCollected = ref(0)
-const obstaclesJumped = ref(0)
-
-// Features
-const isInvulnerable = ref(false)
-const invulnerabilityTimeLeft = ref(0)
-const doubleJumpActive = ref(false)
-const doubleJumpTimeLeft = ref(0)
-const canDoubleJump = ref(false)
-
-// Visuelle Effekte
-const pointPopups = ref([])
-const jumpParticles = ref([])
-let nextPopupId = 0
-let nextParticleId = 0
-
-// Rotation des Ponys
-const ponyRotation = computed(() => {
-  if (pony.value.isJumping) {
-    if (pony.value.velocityY < -5) return 'rotate(-15deg)'
-    if (pony.value.velocityY > 5) return 'rotate(10deg)'
-    return 'rotate(-5deg)'
+// Enhanced Horse Recognition Questions (mit echten Charakteristiken)
+const horseQuestions = ref([
+  {
+    question: "Welches Pferd ist das?",
+    description: "Ein sanfter Riese mit großem Herzen. Für alles zu haben, außer Springen – das ist unter seiner Würde. Heimlicher Titel: 'Therapeutischer Kuschelexperte'.",
+    emoji: "🐴",
+    pattern: "simon-pattern",
+    answers: [
+      { text: "Simon", correct: true, emoji: "💝" },
+      { text: "Balu", correct: false },
+      { text: "Napoleon", correct: false },
+      { text: "Fiona", correct: false }
+    ],
+    hint: "Dieser sanfte Riese schmollt, wenn er nicht genug Aufmerksamkeit bekommt."
+  },
+  {
+    question: "Welches Pferd ist das?",
+    description: "Simons BFF und heimlicher Spaßvogel. Wird beim Reiten zum eleganten Gentleman, wiehert aber seinen Spiegel im Stall an – er denkt, da steht ein anderes Pferd!",
+    emoji: "🐎",
+    pattern: "balu-pattern",
+    answers: [
+      { text: "Simon", correct: false },
+      { text: "Balu", correct: true, emoji: "🤵" },
+      { text: "Coco", correct: false },
+      { text: "Sleepy", correct: false }
+    ],
+    hint: "Ohren kraulen ist sein heimliches Laster, und er ist sehr verwirrt von Spiegeln."
+  },
+  {
+    question: "Welches Shetlandpony ist das?",
+    description: "Klein, frech und zu schlau für sein eigenes Wohl. Unser Shetty-Houdini öffnet Türen, Boxen und wahrscheinlich bald auch Kühlschränke. Trägt das Selbstbewusstsein eines Dressurhengstes!",
+    emoji: "🦄",
+    pattern: "napoleon-pattern",
+    answers: [
+      { text: "Coco", correct: false },
+      { text: "Chica", correct: false },
+      { text: "Napoleon", correct: true, emoji: "👑" },
+      { text: "Pucki", correct: false }
+    ],
+    hint: "Seine Größe täuscht – er ist ein Masterplaner und Miniaturrebel!"
+  },
+  {
+    question: "Welches Shetlandpony ist das?",
+    description: "Die Zen-Meisterin unserer Shettys. Steht während des Putzens oft mit geschlossenen Augen da und genießt die Streicheleinheiten wie eine Spa-Behandlung. Könnte Yoga-Kurse für Ponys leiten.",
+    emoji: "🧘‍♀️",
+    pattern: "coco-pattern",
+    answers: [
+      { text: "Chica", correct: false },
+      { text: "Coco", correct: true, emoji: "🧘‍♀️" },
+      { text: "Pucki", correct: false },
+      { text: "Napoleon", correct: false }
+    ],
+    hint: "Diese Entspannungsexpertin und Kuschelprofi ist eine wahre Ruheexpertin."
+  },
+  {
+    question: "Welches Shetlandpony ist das?",
+    description: "Unser quirliges Energiebündel mit der Neugier eines Detektivs. Immer die Erste, die neue Dinge untersuchen muss. Hat eine mysteriöse Affinität zu bunten Mützen und stiehlt sie bei Gelegenheit.",
+    emoji: "🕵️‍♀️",
+    pattern: "chica-pattern",
+    answers: [
+      { text: "Napoleon", correct: false },
+      { text: "Coco", correct: false },
+      { text: "Chica", correct: true, emoji: "🕵️‍♀️" },
+      { text: "Fiona", correct: false }
+    ],
+    hint: "Detektiv auf vier Hufen, Mützendieb und Sonnenschein – sie ist ein Neugiermonster!"
+  },
+  {
+    question: "Welches Shetlandpony ist das?",
+    description: "Unser pelziger Entertainer! Trägt mit Vorliebe Futterschüsseln durchs Gelände wie ein Kellner beim Roomservice. Hat eine besondere Begabung, genau dann süß auszusehen, wenn es Leckerlis geben könnte.",
+    emoji: "🍽️",
+    pattern: "pucki-pattern",
+    answers: [
+      { text: "Chica", correct: false },
+      { text: "Napoleon", correct: false },
+      { text: "Pucki", correct: true, emoji: "🍽️" },
+      { text: "Coco", correct: false }
+    ],
+    hint: "Room-Service-Experte und Meister des bettelnden Blicks – einfach undurchschaubar!"
+  },
+  {
+    question: "Welches Pferd ist das?",
+    description: "Unsere Tinker-Lady mit wallender Mähne und der Attitüde einer Prinzessin. Seit 2024 bereichert sie unser Team mit elegantem Stolzieren und dem Talent, immer dann fotogen auszusehen, wenn jemand die Kamera zückt.",
+    emoji: "📸",
+    pattern: "fiona-pattern",
+    answers: [
+      { text: "Coco", correct: false },
+      { text: "Fiona", correct: true, emoji: "👸" },
+      { text: "Chica", correct: false },
+      { text: "Sleepy", correct: false }
+    ],
+    hint: "Die Fotogene mit dem besonderen Gespür für Kameras – eine echte Instagram-Ready Diva!"
+  },
+  {
+    question: "Welches Pferd ist das?",
+    description: "Lebt nach dem Motto: 'Warum heute galoppieren, wenn man auch morgen traben kann?' Seine Spezialität: strategische Pausen und das unübertroffene Talent, selbst beim Fressen entspannt auszusehen. Ein wahrer Zen-Künstler!",
+    emoji: "😴",
+    pattern: "sleepy-pattern",
+    answers: [
+      { text: "Simon", correct: false },
+      { text: "Sleepy", correct: true, emoji: "😴" },
+      { text: "Balu", correct: false },
+      { text: "Pucki", correct: false }
+    ],
+    hint: "Der Philosoph unter den Ponys, Meister der Entschleunigung und Anti-Stress-Coach."
   }
-  return 'rotate(0deg)'
+])
+
+// Enhanced General Quiz Questions
+const generalQuestions = ref([
+  {
+    question: "Wie nennt man ein junges Pferd?",
+    emoji: "🍼",
+    answers: [
+      { text: "Kalb", correct: false },
+      { text: "Welpe", correct: false },
+      { text: "Fohlen", correct: true, emoji: "🐴" },
+      { text: "Küken", correct: false }
+    ],
+    hint: "Es ist kein Hundebaby und definitiv kein Vogel!"
+  },
+  {
+    question: "Was fressen Pferde am liebsten?",
+    emoji: "🌾",
+    answers: [
+      { text: "Fleisch", correct: false },
+      { text: "Gras und Heu", correct: true, emoji: "🌿" },
+      { text: "Fisch", correct: false },
+      { text: "Schokolade", correct: false }
+    ],
+    hint: "Pferde sind Pflanzenfresser und lieben grüne Sachen!"
+  },
+  {
+    question: "Welche Gangart ist die schnellste beim Pferd?",
+    emoji: "🏃‍♂️",
+    answers: [
+      { text: "Schritt", correct: false },
+      { text: "Trab", correct: false },
+      { text: "Galopp", correct: true, emoji: "💨" },
+      { text: "Hüpfen", correct: false }
+    ],
+    hint: "Bei Pferderennen sieht man diese Gangart am häufigsten."
+  },
+  {
+    question: "Wie heißt das Zuhause von Pferden?",
+    emoji: "🏠",
+    answers: [
+      { text: "Hundehütte", correct: false },
+      { text: "Stall", correct: true, emoji: "🏚️" },
+      { text: "Nest", correct: false },
+      { text: "Höhle", correct: false }
+    ],
+    hint: "Dort werden die Pferde gefüttert und gepflegt – und gemistet!"
+  },
+  {
+    question: "Was trägt man beim Reiten auf dem Kopf?",
+    emoji: "🛡️",
+    answers: [
+      { text: "Mütze", correct: false },
+      { text: "Reithelm", correct: true, emoji: "⛑️" },
+      { text: "Hut", correct: false },
+      { text: "Nichts", correct: false }
+    ],
+    hint: "Sicherheit ist beim Reiten sehr wichtig – besonders für den Kopf!"
+  },
+  {
+    question: "Wie viele Beine hat ein Pferd?",
+    emoji: "🦵",
+    answers: [
+      { text: "Zwei", correct: false },
+      { text: "Drei", correct: false },
+      { text: "Vier", correct: true, emoji: "4️⃣" },
+      { text: "Sechs", correct: false }
+    ],
+    hint: "Zähl mal nach – wie viele Hufe hörst du beim Galopp?"
+  },
+  {
+    question: "Was ist Napoleon in unserem Stall bekannt als?",
+    emoji: "🎭",
+    answers: [
+      { text: "Schlafmütze", correct: false },
+      { text: "Shetty-Houdini", correct: true, emoji: "🗝️" },
+      { text: "Futterspezi", correct: false },
+      { text: "Kuschelprofi", correct: false }
+    ],
+    hint: "Er öffnet Türen, Boxen und wahrscheinlich bald auch Kühlschränke!"
+  },
+  {
+    question: "Womit putzt man ein Pferd?",
+    emoji: "🧽",
+    answers: [
+      { text: "Mit Seife und Schwamm", correct: false },
+      { text: "Mit Putzbürsten", correct: true, emoji: "🪥" },
+      { text: "Mit einem Staubsauger", correct: false },
+      { text: "Gar nicht", correct: false }
+    ],
+    hint: "Pferde lieben es, wenn man sie jeden Tag damit pflegt!"
+  },
+  {
+    question: "Was macht Chica am liebsten?",
+    emoji: "🎩",
+    answers: [
+      { text: "Schlafen", correct: false },
+      { text: "Mützen klauen", correct: true, emoji: "🕵️‍♀️" },
+      { text: "Türen öffnen", correct: false },
+      { text: "Spiegel anwiehern", correct: false }
+    ],
+    hint: "Sie ist unser quirliges Energiebündel mit einer besonderen Sammelleidenschaft!"
+  },
+  {
+    question: "Wer ist bei uns der 'Zen-Meister' unter den Ponys?",
+    emoji: "🧘‍♀️",
+    answers: [
+      { text: "Napoleon", correct: false },
+      { text: "Sleepy", correct: true, emoji: "😴" },
+      { text: "Chica", correct: false },
+      { text: "Pucki", correct: false }
+    ],
+    hint: "Er lebt nach dem Motto: 'Warum heute galoppieren, wenn man auch morgen traben kann?'"
+  }
+])
+
+// Computed Properties
+const currentQuestion = computed(() => {
+  const questions = currentQuizMode.value === 'horse-recognition' ? horseQuestions.value : generalQuestions.value
+  return questions[currentQuestionIndex.value]
 })
 
-let gameLoopIntervalId = null
-let obstacleTimeoutId = null
-let collectibleTimeoutId = null
-let powerupTimeoutId = null
-let heartTimeoutId = null
-let countdownIntervalId = null
-
-const pony = ref({
-  y: 0,
-  velocityY: 0,
-  isJumping: false,
-  jumpPower: 18,
-  gravity: 0.8,
-  baseY: 0,
-  canDoubleJump: false,
-  hasDoubleJumped: false,
-  width: PONY_COLLISION_WIDTH_BASE,
-  height: PONY_COLLISION_HEIGHT_BASE,
+const totalQuestions = computed(() => {
+  return currentQuizMode.value === 'horse-recognition' ? horseQuestions.value.length : generalQuestions.value.length
 })
 
-const ponyVisual = computed(() => {
-  let imgSrcToUse = PONY_IMG_NORMAL_SRC
-  let emojiToUse = '🐴'
-  if (gameOver.value && PONY_IMG_HIT_SRC) {
-    imgSrcToUse = PONY_IMG_HIT_SRC
-    emojiToUse = '😵'
-  } else if (isInvulnerable.value) {
-    emojiToUse = '⚡'
-  }
-  return {
-    imageSrc: imgSrcToUse,
-    emoji: emojiToUse,
-    widthClass: PONY_DISPLAY_WIDTH_CLASS,
-    heightClass: PONY_DISPLAY_HEIGHT_CLASS,
-  }
-})
-
-const obstacles = ref([])
-let nextObstacleId = 0
-
-const collectibles = ref([])
-let nextCollectibleId = 0
-
-// --- Level-System ---
-const checkLevelUp = () => {
-  const threshold = difficultySettings[difficulty.value].levelUpThreshold
-  const newLevel = Math.floor(score.value / threshold) + 1
-
-  if (newLevel > currentLevel.value) {
-    currentLevel.value = newLevel
-    showLevelUp.value = true
-
-    // Level-Up Benachrichtigung für 2 Sekunden anzeigen
-    setTimeout(() => {
-      showLevelUp.value = false
-    }, 2000)
-
-    // Bonus für Level-Up
-    score.value += 100
-    showPointPopup(200, 100, '+100 Level Bonus!', 'text-purple-400 text-xl')
-  }
+// Methods
+const startQuiz = (mode) => {
+  currentQuizMode.value = mode
+  quizStarted.value = true
+  resetQuizState()
 }
 
-// --- Hindernistyp-Bestimmung ---
-const getObstacleType = () => {
-  if (currentLevel.value === 1) return 'normal'
-
-  const random = Math.random()
-  if (currentLevel.value >= 4) {
-    // Ab Level 4: Alle Typen möglich
-    if (random < 0.5) return 'normal'
-    if (random < 0.75) return 'moving'
-    return 'fast'
-  } else if (currentLevel.value >= 3) {
-    // Ab Level 3: Normal und beweglich
-    if (random < 0.6) return 'normal'
-    if (random < 0.85) return 'moving'
-    return 'fast'
-  } else if (currentLevel.value >= 2) {
-    // Ab Level 2: Normal und beweglich
-    if (random < 0.7) return 'normal'
-    return 'moving'
-  }
-
-  return 'normal'
-}
-
-// --- Spielfunktionen ---
-const startGame = () => {
-  console.log('Spiel: startGame aufgerufen')
-
-  pony.value.jumpPower = difficultySettings[difficulty.value].jumpPower
-  pony.value.gravity = difficultySettings[difficulty.value].gravity
-
-  // Reset
+const resetQuizState = () => {
+  currentQuestionIndex.value = 0
   score.value = 0
-  currentLevel.value = 1
-  lives.value = 3
-  starsCollected.value = 0
-  carrotsCollected.value = 0
-  obstaclesJumped.value = 0
-  pony.value.y = pony.value.baseY
-  pony.value.velocityY = 0
-  pony.value.isJumping = false
-  pony.value.hasDoubleJumped = false
-  obstacles.value = []
-  collectibles.value = []
-  pointPopups.value = []
-  jumpParticles.value = []
-  isInvulnerable.value = false
-  invulnerabilityTimeLeft.value = 0
-  doubleJumpActive.value = false
-  doubleJumpTimeLeft.value = 0
-  canDoubleJump.value = false
-  gameOver.value = false
-  isPaused.value = false
-  gameStarted.value = true
-  showLevelUp.value = false
-
-  clearTimersAndIntervals()
-
-  // Countdown
-  countdown.value = 3
-  countdownIntervalId = setInterval(() => {
-    countdown.value--
-    if (countdown.value <= 0) {
-      clearInterval(countdownIntervalId)
-      countdownIntervalId = null
-
-      gameRunning.value = true
-      if (gameArea.value) {
-        gameArea.value.focus()
-      }
-
-      gameLoopIntervalId = setInterval(gameLoop, 16) // 60 FPS
-      scheduleNextObstacle()
-      scheduleNextCollectible()
-      schedulePowerupCollectible()
-      scheduleHeartCollectible()
-    }
-  }, 800)
+  correctAnswers.value = 0
+  selectedAnswer.value = null
+  answerSelected.value = false
+  showResults.value = false
 }
 
-const togglePause = () => {
-  if (gameOver.value || countdown.value > 0) return
-  if (isPaused.value) {
-    resumeGame()
+const selectAnswer = (answerIndex) => {
+  if (answerSelected.value) return
+
+  selectedAnswer.value = answerIndex
+  answerSelected.value = true
+
+  const isCorrect = currentQuestion.value.answers[answerIndex].correct
+  if (isCorrect) {
+    score.value += 10
+    correctAnswers.value++
+  }
+}
+
+const nextQuestion = () => {
+  if (currentQuestionIndex.value < totalQuestions.value - 1) {
+    currentQuestionIndex.value++
+    selectedAnswer.value = null
+    answerSelected.value = false
   } else {
-    pauseGame()
+    showResults.value = true
   }
 }
 
-const pauseGame = () => {
-  if (isPaused.value) return
-  isPaused.value = true
-  gameRunning.value = false
-  clearTimersAndIntervals(false)
-}
+const getAnswerButtonClass = (index) => {
+  if (!answerSelected.value) {
+    return 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary-color dark:hover:border-primary-light hover:bg-gray-50 dark:hover:bg-gray-600 cursor-pointer hover:shadow-lg'
+  }
 
-const resumeGame = () => {
-  if (!isPaused.value) return
-  isPaused.value = false
-  countdown.value = 3
-  countdownIntervalId = setInterval(() => {
-    countdown.value--
-    if (countdown.value <= 0) {
-      clearInterval(countdownIntervalId)
-      countdownIntervalId = null
-      gameRunning.value = true
-      if (gameArea.value) {
-        gameArea.value.focus()
-      }
-      gameLoopIntervalId = setInterval(gameLoop, 16)
-      scheduleNextObstacle()
-      scheduleNextCollectible()
-      schedulePowerupCollectible()
-      scheduleHeartCollectible()
-    }
-  }, 800)
-}
+  const isSelected = selectedAnswer.value === index
+  const isCorrect = currentQuestion.value.answers[index].correct
 
-const jump = () => {
-  if (!gameRunning.value || gameOver.value) return
-
-  if (!pony.value.isJumping) {
-    // Erster Sprung mit Partikel-Effekt
-    pony.value.isJumping = true
-    pony.value.velocityY = -pony.value.jumpPower
-    pony.value.hasDoubleJumped = false
-    canDoubleJump.value = doubleJumpActive.value
-    createJumpParticles()
-  } else if (canDoubleJump.value && !pony.value.hasDoubleJumped) {
-    // Doppelsprung
-    pony.value.velocityY = -pony.value.jumpPower * 0.85
-    pony.value.hasDoubleJumped = true
-    createJumpParticles()
-    showPointPopup(pony.value.width + 20, pony.value.y, '⬆️', 'text-green-400')
+  if (isSelected && isCorrect) {
+    return 'border-green-500 bg-gradient-to-r from-green-100 to-emerald-100 dark:from-green-900/50 dark:to-emerald-900/50 text-green-800 dark:text-green-200 shadow-lg'
+  } else if (isSelected && !isCorrect) {
+    return 'border-red-500 bg-gradient-to-r from-red-100 to-rose-100 dark:from-red-900/50 dark:to-rose-900/50 text-red-800 dark:text-red-200 shadow-lg'
+  } else if (isCorrect) {
+    return 'border-green-500 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 text-green-700 dark:text-green-300'
+  } else {
+    return 'border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-500 dark:text-gray-400'
   }
 }
 
-const createJumpParticles = () => {
-  const ponyLeftEdge = 20
-  for (let i = 0; i < 3; i++) {
-    jumpParticles.value.push({
-      id: nextParticleId++,
-      x: ponyLeftEdge + Math.random() * 20 - 10,
-      y: 5 + Math.random() * 10,
-      scale: 0.5 + Math.random() * 0.5,
-      opacity: 1,
+const getResultsEmoji = () => {
+  const percentage = (correctAnswers.value / totalQuestions.value) * 100
+  if (percentage === 100) return '🏆'
+  if (percentage >= 90) return '🥇'
+  if (percentage >= 75) return '🥈'
+  if (percentage >= 60) return '🥉'
+  if (percentage >= 40) return '🌟'
+  return '📚'
+}
+
+const getResultsTitle = () => {
+  const percentage = (correctAnswers.value / totalQuestions.value) * 100
+  if (percentage === 100) return 'Perfekte Leistung!'
+  if (percentage >= 90) return 'Pferdeexperte!'
+  if (percentage >= 75) return 'Sehr gut gemacht!'
+  if (percentage >= 60) return 'Gut gemacht!'
+  if (percentage >= 40) return 'Das war ein Anfang!'
+  return 'Übung macht den Meister!'
+}
+
+const getResultsMessage = () => {
+  const percentage = (correctAnswers.value / totalQuestions.value) * 100
+  const mode = currentQuizMode.value === 'horse-recognition' ? 'unsere Hofpferde' : 'das Pferdewissen'
+
+  if (percentage === 100) {
+    return `🎉 Unglaublich! Du hast alle Fragen richtig beantwortet! Du kennst ${mode} besser als manche unserer Ponys sich selbst! 🌟`
+  } else if (percentage >= 90) {
+    return `Wow! Du kennst ${mode} wirklich sehr gut. Du bist ein echter Pferdeprofi! Ein paar weitere Besuche bei uns und du wirst zum Pferde-Guru! 🌟`
+  } else if (percentage >= 75) {
+    return `Super Leistung! Du hast schon sehr viel über ${mode} gelernt. Mit deinem Wissen könntest du glatt als Ponyhof-Guide arbeiten! 👏`
+  } else if (percentage >= 60) {
+    return `Nicht schlecht! Du bist auf einem guten Weg. Mit etwas mehr Zeit im Sattel wirst du zum Experten! 💪`
+  } else if (percentage >= 40) {
+    return `Das ist ein guter Anfang! Schau gerne öfter bei uns vorbei, um mehr zu lernen. Unsere Ponys freuen sich immer über neue Freunde! 🐴`
+  } else {
+    return `Keine Sorge, jeder fängt mal an! Besuche uns gerne und lerne unsere Pferde persönlich kennen. Sie sind noch viel charmanter in echt! 🤗`
+  }
+}
+
+const restartQuiz = () => {
+  resetQuizState()
+  showResults.value = false
+}
+
+const changeQuizMode = () => {
+  quizStarted.value = false
+  resetQuizState()
+}
+
+const shareResult = (platform) => {
+  const percentage = Math.round((correctAnswers.value / totalQuestions.value) * 100)
+  const quizType = currentQuizMode.value === 'horse-recognition' ? 'Pferde-Erkennungs-Quiz' : 'Pony-Wissen-Quiz'
+  const text = `Ich habe gerade das ${quizType} bei Leben ist ein Ponyhof gespielt und ${percentage}% richtig beantwortet! 🐴✨ Teste auch dein Pferdewissen: https://lebenisteinponyhof.de/game`
+
+  if (platform === 'whatsapp') {
+    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank')
+  } else if (platform === 'copy') {
+    navigator.clipboard.writeText(text).then(() => {
+      alert('Link wurde in die Zwischenablage kopiert! 📋✨')
+    }).catch(() => {
+      alert('Link konnte nicht kopiert werden')
     })
   }
-
-  setTimeout(() => {
-    jumpParticles.value = jumpParticles.value.filter(p => p.id < nextParticleId - 3)
-  }, 500)
 }
 
-const handleGameAreaClick = () => {
-  if (!gameRunning.value || gameOver.value) {
-    if (!gameRunning.value && !gameOver.value) {
-      if (!gameStarted.value || isPaused.value) {
-        startGame()
-      } else if (isPaused.value) {
-        resumeGame()
-      }
-    }
-  } else {
-    jump()
-  }
-}
-
-const handleGameAreaSpaceKey = () => {
-  if (!gameRunning.value || gameOver.value) {
-    if (!countdown.value) {
-      startGame()
-    }
-  } else {
-    jump()
-  }
-}
-
-const gameLoop = () => {
-  if (!gameRunning.value) return
-
-  // Level-Up prüfen
-  checkLevelUp()
-
-  // Unverwundbarkeit und PowerUps
-  if (isInvulnerable.value) {
-    invulnerabilityTimeLeft.value -= 16
-    if (invulnerabilityTimeLeft.value <= 0) {
-      isInvulnerable.value = false
-    }
-  }
-
-  if (doubleJumpActive.value) {
-    doubleJumpTimeLeft.value -= 16
-    if (doubleJumpTimeLeft.value <= 0) {
-      doubleJumpActive.value = false
-      canDoubleJump.value = false
-    }
-  }
-
-  // Partikel animieren
-  for (let i = jumpParticles.value.length - 1; i >= 0; i--) {
-    jumpParticles.value[i].y += 1
-    jumpParticles.value[i].opacity -= 0.05
-    if (jumpParticles.value[i].opacity <= 0) {
-      jumpParticles.value.splice(i, 1)
-    }
-  }
-
-  // Punkteanzeige-Popups
-  for (let i = pointPopups.value.length - 1; i >= 0; i--) {
-    pointPopups.value[i].y += 1.5
-    pointPopups.value[i].opacity -= 0.025
-    if (pointPopups.value[i].opacity <= 0) {
-      pointPopups.value.splice(i, 1)
-    }
-  }
-
-  // Pony-Physik
-  pony.value.velocityY += pony.value.gravity
-  pony.value.y += pony.value.velocityY
-
-  const gameAreaHeight = gameArea.value?.clientHeight || 288
-
-  if (pony.value.y >= pony.value.baseY) {
-    pony.value.y = pony.value.baseY
-    pony.value.velocityY = 0
-    if (pony.value.isJumping) {
-      pony.value.isJumping = false
-      pony.value.hasDoubleJumped = false
-    }
-  }
-  if (pony.value.y < -(gameAreaHeight - pony.value.height - pony.value.baseY)) {
-    pony.value.y = -(gameAreaHeight - pony.value.height - pony.value.baseY)
-    pony.value.velocityY = pony.value.gravity
-  }
-
-  const ponyLeftEdge = 20
-  const ponyRect = {
-    x: ponyLeftEdge,
-    y: gameAreaHeight - pony.value.height - pony.value.baseY + pony.value.y,
-    width: pony.value.width,
-    height: pony.value.height,
-  }
-
-  // Hindernisse verarbeiten (mit beweglichen Hindernissen)
-  for (let i = obstacles.value.length - 1; i >= 0; i--) {
-    const obs = obstacles.value[i]
-
-    // Bewegungsgeschwindigkeit je nach Typ
-    let speed = currentSpeed.value
-    if (obs.type === 'fast') speed *= 1.5
-
-    obs.x -= speed
-
-    // Bewegliche Hindernisse auf und ab bewegen
-    if (obs.type === 'moving') {
-      obs.moveTime = (obs.moveTime || 0) + 16
-      obs.moveOffset = Math.sin(obs.moveTime * 0.005) * 15 // 15px hoch/runter
-    }
-
-    if (obs.x + obs.width < ponyLeftEdge && !obs.counted) {
-      obstacles.value[i].counted = true
-      obstaclesJumped.value++
-
-      // Mehr Punkte für schwierigere Hindernisse
-      let points = 10
-      if (obs.type === 'moving') points = 15
-      if (obs.type === 'fast') points = 20
-
-      score.value += points
-
-      if (score.value % 100 === 0) {
-        showPointPopup(obs.x - 20, 50, `+${score.value} Punkte!`, 'text-yellow-300 text-lg')
-      }
-    }
-
-    if (obs.x + obs.width < -10) {
-      obstacles.value.splice(i, 1)
-    }
-
-    const obsRect = {
-      x: obs.x,
-      y: gameAreaHeight - obs.height + (obs.moveOffset || 0),
-      width: obs.width,
-      height: obs.height,
-    }
-
-    if (checkCollision(ponyRect, obsRect) && !isInvulnerable.value) {
-      lives.value--
-      obstacles.value.splice(i, 1)
-      isInvulnerable.value = true
-      invulnerabilityTimeLeft.value = 2000
-      showPointPopup(ponyLeftEdge, pony.value.y - 10, '💥', 'text-red-500 text-2xl')
-
-      if (lives.value <= 0 && !gameOver.value) {
-        endGame()
-        return
-      }
-    }
-  }
-
-  // Sammelobjekte verarbeiten
-  for (let i = collectibles.value.length - 1; i >= 0; i--) {
-    const item = collectibles.value[i]
-    item.x -= currentSpeed.value * 0.9
-    if (item.x + item.size < -10) {
-      collectibles.value.splice(i, 1)
-    }
-    const itemRect = {
-      x: item.x,
-      y: gameAreaHeight - item.size - item.y,
-      width: item.size,
-      height: item.size,
-    }
-    if (checkCollision(ponyRect, itemRect)) {
-      if (item.type === 'star') {
-        score.value += 50
-        starsCollected.value++
-        showPointPopup(item.x, item.y, '+50', 'text-yellow-300')
-      } else if (item.type === 'carrot') {
-        score.value += 25
-        carrotsCollected.value++
-        showPointPopup(item.x, item.y, '+25', 'text-orange-400')
-      } else if (item.type === 'powerup') {
-        doubleJumpActive.value = true
-        doubleJumpTimeLeft.value = 15000
-        canDoubleJump.value = true
-        score.value += 30
-        showPointPopup(item.x, item.y, '🍀 Doppelsprung!', 'text-green-400')
-      } else if (item.type === 'heart') {
-        lives.value = Math.min(lives.value + 1, 5)
-        score.value += 40
-        showPointPopup(item.x, item.y, '❤️ +1 Leben!', 'text-red-400')
-      }
-      collectibles.value.splice(i, 1)
-    }
-  }
-
-  if (score.value > highscore.value) highscore.value = score.value
-}
-
-const showPointPopup = (x, y, text, colorClass) => {
-  pointPopups.value.push({
-    id: nextPopupId++,
-    x,
-    y,
-    text,
-    color: colorClass,
-    opacity: 1,
-  })
-
-  setTimeout(() => {
-    const index = pointPopups.value.findIndex((p) => p.id === nextPopupId - 1)
-    if (index !== -1) {
-      pointPopups.value.splice(index, 1)
-    }
-  }, 1500)
-}
-
-const checkCollision = (rect1, rect2) => {
-  return (
-    rect1.x < rect2.x + rect2.width &&
-    rect1.x + rect1.width > rect2.x &&
-    rect1.y < rect2.y + rect2.height &&
-    rect1.y + rect1.height > rect2.y
-  )
-}
-
-const scheduleNextObstacle = () => {
-  if (!gameRunning.value || gameOver.value || !gameArea.value) return
-
-  obstacleTimeoutId = setTimeout(
-    () => {
-      const gameAreaWidth = gameArea.value?.clientWidth
-      if (!gameAreaWidth) {
-        scheduleNextObstacle()
-        return
-      }
-
-      const obstacleType = getObstacleType()
-      let obsHeight = Math.floor(
-        Math.random() * (OBSTACLE_COLLISION_HEIGHT_MAX.value - OBSTACLE_COLLISION_HEIGHT_MIN + 1)
-      ) + OBSTACLE_COLLISION_HEIGHT_MIN
-
-      let obsWidth = OBSTACLE_COLLISION_WIDTH
-
-      // Schnelle Hindernisse sind breiter
-      if (obstacleType === 'fast') {
-        obsWidth = OBSTACLE_COLLISION_WIDTH * 1.5
-      }
-
-      obstacles.value.push({
-        id: nextObstacleId++,
-        x: gameAreaWidth,
-        width: obsWidth,
-        height: obsHeight,
-        type: obstacleType,
-        counted: false,
-        moveTime: 0,
-        moveOffset: 0,
-      })
-      scheduleNextObstacle()
-    },
-    currentObstacleSpawnTime.value
-  )
-}
-
-const scheduleNextCollectible = () => {
-  if (!gameRunning.value || gameOver.value || !gameArea.value) return
-
-  const dynamicSpawnTime = difficultySettings[difficulty.value].collectibleSpawnTime - Math.min(1000, score.value)
-
-  collectibleTimeoutId = setTimeout(
-    () => {
-      const gameAreaWidth = gameArea.value?.clientWidth
-      if (!gameAreaWidth) {
-        scheduleNextCollectible()
-        return
-      }
-
-      const type = Math.random() < 0.65 ? 'star' : 'carrot'
-      const itemSize = type === 'star' ? STAR_COLLECTIBLE_SIZE : CARROT_COLLECTIBLE_SIZE
-
-      collectibles.value.push({
-        id: nextCollectibleId++,
-        type,
-        x: gameAreaWidth + Math.floor(Math.random() * 150),
-        y: Math.floor(Math.random() * (gameArea.value.clientHeight / 2.5)) + itemSize,
-        size: itemSize,
-      })
-      scheduleNextCollectible()
-    },
-    Math.max(1200, dynamicSpawnTime)
-  )
-}
-
-const schedulePowerupCollectible = () => {
-  if (!gameRunning.value || gameOver.value || !gameArea.value) return
-
-  const powerupSpawnTime =
-    difficultySettings[difficulty.value].powerupSpawnTime - Math.min(3000, score.value * 5)
-
-  powerupTimeoutId = setTimeout(
-    () => {
-      const gameAreaWidth = gameArea.value?.clientWidth
-      if (!gameAreaWidth) {
-        schedulePowerupCollectible()
-        return
-      }
-
-      collectibles.value.push({
-        id: nextCollectibleId++,
-        type: 'powerup',
-        x: gameAreaWidth + Math.floor(Math.random() * 100),
-        y:
-          Math.floor(Math.random() * (gameArea.value.clientHeight / 2)) +
-          POWERUP_COLLECTIBLE_SIZE,
-        size: POWERUP_COLLECTIBLE_SIZE,
-      })
-
-      schedulePowerupCollectible()
-    },
-    Math.max(8000, powerupSpawnTime)
-  )
-}
-
-const scheduleHeartCollectible = () => {
-  if (!gameRunning.value || gameOver.value || !gameArea.value) return
-
-  const heartSpawnTime = difficultySettings[difficulty.value].heartSpawnTime
-
-  heartTimeoutId = setTimeout(() => {
-    const gameAreaWidth = gameArea.value?.clientWidth
-    if (!gameAreaWidth) {
-      scheduleHeartCollectible()
-      return
-    }
-
-    collectibles.value.push({
-      id: nextCollectibleId++,
-      type: 'heart',
-      x: gameAreaWidth + Math.floor(Math.random() * 100),
-      y: Math.floor(Math.random() * (gameArea.value.clientHeight / 2.5)) + HEART_COLLECTIBLE_SIZE,
-      size: HEART_COLLECTIBLE_SIZE,
-    })
-
-    scheduleHeartCollectible()
-  }, heartSpawnTime)
-}
-
-const endGame = () => {
-  if (gameOver.value) return
-  console.log('Spiel: Spiel beendet! Score:', score.value)
-  gameRunning.value = false
-  gameOver.value = true
-  clearTimersAndIntervals()
-  if (gameArea.value) {
-    gameArea.value.blur()
-  }
-}
-
-const clearTimersAndIntervals = (clearCountdown = true) => {
-  clearInterval(gameLoopIntervalId)
-  gameLoopIntervalId = null
-  clearTimeout(obstacleTimeoutId)
-  obstacleTimeoutId = null
-  clearTimeout(collectibleTimeoutId)
-  collectibleTimeoutId = null
-  clearTimeout(powerupTimeoutId)
-  powerupTimeoutId = null
-  clearTimeout(heartTimeoutId)
-  heartTimeoutId = null
-
-  if (clearCountdown) {
-    clearInterval(countdownIntervalId)
-    countdownIntervalId = null
-  }
-}
-
+// Shuffle questions on mount
 onMounted(() => {
-  pony.value.baseY = 0
-})
-
-onUnmounted(() => {
-  clearTimersAndIntervals()
+  // Shuffle questions for variety
+  horseQuestions.value = horseQuestions.value.sort(() => Math.random() - 0.5)
+  generalQuestions.value = generalQuestions.value.sort(() => Math.random() - 0.5)
 })
 </script>
 
 <style scoped>
-.pony,
-.obstacle,
-.collectible {
-  user-select: none;
+/* Enhanced Floating Animations */
+.floating-particle {
+  position: absolute;
+  font-size: 2rem;
+  opacity: 0.6;
+  animation: float-enhanced 15s infinite ease-in-out;
   pointer-events: none;
-  will-change: transform, left;
 }
 
-.game-canvas-container {
-  touch-action: manipulation;
-}
-
-.game-canvas-container:focus-visible {
-  outline: 3px solid theme('colors.primary-color');
-  outline-offset: 2px;
-}
-
-/* Hinderniss-spezifische Animationen */
-.animate-bounce-obstacle {
-  animation: bounce-obstacle 1s infinite ease-in-out;
-}
-
-@keyframes bounce-obstacle {
+@keyframes float-enhanced {
   0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-15px);
-  }
-}
-
-.fast-obstacle {
-  animation: fast-glow 0.5s infinite alternate;
-}
-
-@keyframes fast-glow {
-  0% {
-    filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3)) brightness(1);
-  }
-  100% {
-    filter: drop-shadow(2px 2px 8px rgba(245, 158, 11, 0.6)) brightness(1.1);
-  }
-}
-
-/* Level-Up Animation */
-.level-up-notification {
-  animation: level-up-bounce 2s ease-out;
-}
-
-@keyframes level-up-bounce {
-  0% {
-    transform: scale(0.3);
-    opacity: 0;
-  }
-  20% {
-    transform: scale(1.2);
-    opacity: 1;
-  }
-  40% {
-    transform: scale(0.9);
-  }
-  60% {
-    transform: scale(1.1);
-  }
-  80% {
-    transform: scale(0.95);
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-.level-up-enter-active {
-  animation: level-up-bounce 2s ease-out;
-}
-
-.level-up-leave-active {
-  animation: level-up-fade 0.5s ease-in;
-}
-
-@keyframes level-up-fade {
-  0% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(1.1);
-    opacity: 0;
-  }
-}
-
-/* Verbesserte Animationen */
-.animate-pulse-glow {
-  animation: pulse-glow 1.5s infinite ease-in-out;
-}
-
-@keyframes pulse-glow {
-  0%, 100% {
-    transform: scale(1);
-    filter: brightness(1) drop-shadow(1px 1px 3px rgba(0,0,0,0.4));
-  }
-  50% {
-    transform: scale(1.1);
-    filter: brightness(1.2) drop-shadow(2px 2px 6px rgba(255,255,0,0.3));
-  }
-}
-
-.animate-bounce-smooth {
-  animation: bounce-smooth 1.5s infinite ease-in-out;
-}
-
-@keyframes bounce-smooth {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-8px);
-  }
-}
-
-.animate-gentle-bob {
-  animation: gentle-bob 2s infinite ease-in-out;
-}
-
-@keyframes gentle-bob {
-  0%, 100% {
-    transform: translateY(0) rotate(0deg);
+    transform: translateY(0px) rotate(0deg);
+    opacity: 0.3;
   }
   25% {
-    transform: translateY(-3px) rotate(2deg);
+    transform: translateY(-20px) rotate(90deg);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translateY(-10px) rotate(180deg);
+    opacity: 0.6;
   }
   75% {
-    transform: translateY(-1px) rotate(-1deg);
+    transform: translateY(-30px) rotate(270deg);
+    opacity: 0.9;
   }
 }
 
-/* Unverwundbarkeitseffekt verbessert */
-.invulnerable-flash {
-  animation: flash-improved 0.2s infinite alternate;
+/* Enhanced Title Animation */
+.quiz-title-animation {
+  animation: fade-in-up 1s ease-out;
 }
 
-@keyframes flash-improved {
+@keyframes fade-in-up {
   0% {
-    opacity: 1;
-    filter: brightness(1) drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+    opacity: 0;
+    transform: translateY(30px);
   }
   100% {
-    opacity: 0.4;
-    filter: brightness(1.5) drop-shadow(2px 2px 8px rgba(255,255,255,0.5));
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-/* Countdown Animation verbessert */
-.animate-pulse-scale {
-  animation: pulse-scale-improved 0.8s infinite ease-in-out;
+/* Enhanced Progress Bar */
+.progress-container {
+  position: relative;
+  background: linear-gradient(90deg, #f3f4f6, #e5e7eb);
 }
 
-@keyframes pulse-scale-improved {
+.progress-bar {
+  position: relative;
+  background: linear-gradient(90deg, #ff3b7d, #fda085, #ffd700);
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite;
+}
+
+/* Enhanced Polaroid Effects */
+.horse-polaroid-enhanced {
+  max-width: 350px;
+  perspective: 1000px;
+}
+
+.polaroid-frame {
+  background: linear-gradient(145deg, #ffffff, #f8f9fa);
+  border-radius: 20px;
+  box-shadow:
+      0 25px 50px rgba(0, 0, 0, 0.15),
+      0 10px 25px rgba(0, 0, 0, 0.1),
+      inset 0 1px 3px rgba(255, 255, 255, 0.8);
+  transform: rotate(-3deg);
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  padding: 20px 20px 40px 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.polaroid-frame:hover {
+  transform: rotate(0deg) scale(1.05);
+  box-shadow:
+      0 35px 60px rgba(0, 0, 0, 0.2),
+      0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.polaroid-photo {
+  position: relative;
+  width: 250px;
+  height: 250px;
+  margin: 0 auto;
+  background: linear-gradient(135deg, #f0f2f5 0%, #e2e8f0 100%);
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: inset 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.horse-avatar {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.horse-emoji-large {
+  font-size: 6rem;
+  z-index: 3;
+  position: relative;
+  filter: drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.3));
+  animation: gentle-bounce 3s infinite ease-in-out;
+}
+
+@keyframes gentle-bounce {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.horse-pattern-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0.4;
+  border-radius: 15px;
+  z-index: 1;
+}
+
+/* Enhanced Horse Patterns */
+.simon-pattern {
+  background: radial-gradient(circle at 30% 30%, #8B4513 0%, #D2691E 40%, transparent 70%);
+}
+
+.balu-pattern {
+  background: radial-gradient(circle at 40% 20%, #654321 0%, #8B4513 50%, transparent 80%);
+}
+
+.napoleon-pattern {
+  background: linear-gradient(45deg, #000 25%, #fff 25%, #fff 50%, #000 50%, #000 75%, #fff 75%);
+  background-size: 30px 30px;
+}
+
+.coco-pattern {
+  background: linear-gradient(to bottom, #D2691E 0%, #8B4513 20%, #D2691E 21%, #D2691E 100%);
+}
+
+.chica-pattern {
+  background: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #000 100%);
+}
+
+.pucki-pattern {
+  background: conic-gradient(from 0deg, #8B4513, #D2691E, #CD853F, #8B4513);
+}
+
+.fiona-pattern {
+  background: linear-gradient(45deg, #4a5568, #2d3748, #1a202c, #2d3748);
+  background-size: 40px 40px;
+}
+
+.sleepy-pattern {
+  background: radial-gradient(ellipse at center, #a0aec0 0%, #718096 50%, #4a5568 100%);
+}
+
+.shimmer-effect {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  animation: shimmer-rotate 4s infinite;
+  z-index: 2;
+}
+
+@keyframes shimmer-rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.polaroid-text {
+  text-align: center;
+  margin-top: 15px;
+}
+
+.horse-name-mystery {
+  font-family: 'Comic Sans MS', cursive;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #4a5568;
+  margin-bottom: 5px;
+}
+
+.horse-description {
+  font-family: 'Comic Sans MS', cursive;
+  font-size: 0.85rem;
+  color: #718096;
+  line-height: 1.4;
+}
+
+/* Floating Hearts */
+.floating-hearts {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.heart {
+  position: absolute;
+  font-size: 1.5rem;
+  opacity: 0.7;
+  animation: float-heart 6s infinite ease-in-out;
+}
+
+@keyframes float-heart {
+  0%, 100% {
+    transform: translateY(0px) scale(1);
+    opacity: 0;
+  }
+  25% {
+    opacity: 0.8;
+    transform: translateY(-20px) scale(1.2);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-40px) scale(1);
+  }
+  75% {
+    opacity: 0.6;
+    transform: translateY(-60px) scale(0.8);
+  }
+}
+
+/* Enhanced Question Animations */
+.question-fade-in {
+  animation: fade-in 0.8s ease-out;
+}
+
+.emoji-bounce {
+  animation: emoji-bounce 2s infinite ease-in-out;
+}
+
+@keyframes emoji-bounce {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+  }
+  25% {
+    transform: scale(1.1) rotate(5deg);
+  }
+  75% {
+    transform: scale(0.95) rotate(-5deg);
+  }
+}
+
+/* Enhanced Hint Box */
+.hint-box {
+  animation: hint-glow 2s infinite ease-in-out;
+}
+
+@keyframes hint-glow {
+  0%, 100% {
+    box-shadow: 0 4px 8px rgba(245, 158, 11, 0.2);
+  }
+  50% {
+    box-shadow: 0 8px 16px rgba(245, 158, 11, 0.4);
+  }
+}
+
+/* Enhanced Answer Buttons */
+.answer-btn-enhanced {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(145deg, #ffffff, #f8fafc);
+  backdrop-filter: blur(10px);
+}
+
+.answer-letter-enhanced {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  flex-shrink: 0;
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.answer-text-enhanced {
+  transition: all 0.3s ease;
+}
+
+.answer-emoji-enhanced {
+  flex-shrink: 0;
+}
+
+/* Selection Animation */
+.selection-pulse {
+  background: linear-gradient(45deg, rgba(59, 130, 246, 0.1), rgba(147, 51, 234, 0.1));
+  animation: selection-pulse 1.5s infinite;
+}
+
+@keyframes selection-pulse {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.02);
+  }
+}
+
+/* Enhanced Results */
+.results-card-enhanced {
+  background: linear-gradient(145deg, #ffffff, #f8fafc);
+  backdrop-filter: blur(20px);
+  animation: results-appear 1s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@keyframes results-appear {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) translateY(50px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.celebration-bg {
+  position: absolute;
+  inset: 0;
+}
+
+.confetti-piece {
+  position: absolute;
+  font-size: 2rem;
+  animation: confetti-fall 3s infinite ease-in-out;
+}
+
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(-20px) rotate(0deg);
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.results-icon-enhanced {
+  filter: drop-shadow(4px 4px 8px rgba(0, 0, 0, 0.2));
+}
+
+.animate-bounce-slow {
+  animation: bounce-slow 3s infinite;
+}
+
+@keyframes bounce-slow {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+.score-display-enhanced {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(248, 250, 252, 0.05));
+  border-radius: 20px;
+  padding: 2rem;
+  backdrop-filter: blur(10px);
+}
+
+.animate-pulse-gentle {
+  animation: pulse-gentle 4s infinite ease-in-out;
+}
+
+@keyframes pulse-gentle {
   0%, 100% {
     transform: scale(1);
-    opacity: 1;
-    text-shadow: 0 0 20px rgba(255,255,255,0.5);
   }
   50% {
-    transform: scale(1.15);
-    opacity: 0.9;
-    text-shadow: 0 0 30px rgba(255,255,255,0.8);
+    transform: scale(1.05);
   }
 }
 
-/* Punkt-Popup Animationen verbessert */
-.point-popup {
-  transition: transform 0.3s ease-out, opacity 0.3s ease-in-out;
-  pointer-events: none;
+/* Achievement Badges */
+.achievement-badges {
+  gap: 1rem;
 }
 
-.text-shadow-strong {
-  text-shadow:
-    0 2px 4px rgba(0, 0, 0, 0.8),
-    0 0 8px rgba(255, 255, 255, 0.3);
+.badge {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(145deg, #ffffff, #f1f5f9);
+  border-radius: 25px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  font-size: 0.875rem;
+  font-weight: bold;
+  color: #4a5568;
+  animation: badge-appear 0.8s ease-out;
 }
 
-.point-popup-enter-active {
-  animation: popup-appear-improved 0.3s;
+.badge i {
+  margin-right: 0.5rem;
 }
 
-.point-popup-leave-active {
-  animation: popup-fade-improved 0.5s;
-}
-
-@keyframes popup-appear-improved {
+@keyframes badge-appear {
   0% {
-    transform: scale(0.3) translateY(10px);
     opacity: 0;
-  }
-  50% {
-    transform: scale(1.1) translateY(-5px);
-    opacity: 1;
+    transform: scale(0) rotate(180deg);
   }
   100% {
-    transform: scale(1) translateY(0);
     opacity: 1;
+    transform: scale(1) rotate(0deg);
   }
 }
 
-@keyframes popup-fade-improved {
+.perfect-score {
+  background: linear-gradient(145deg, #fbbf24, #f59e0b);
+  color: white;
+}
+
+.high-score {
+  background: linear-gradient(145deg, #3b82f6, #1d4ed8);
+  color: white;
+}
+
+.horse-expert {
+  background: linear-gradient(145deg, #d97706, #b45309);
+  color: white;
+}
+
+/* Enhanced Info Cards */
+.info-card-enhanced {
+  background: linear-gradient(145deg, #ffffff, #f8fafc);
+  backdrop-filter: blur(10px);
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.info-card-enhanced:hover {
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+}
+
+/* Enhanced CTA Section */
+.cta-section-enhanced {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(248, 250, 252, 0.05));
+  backdrop-filter: blur(20px);
+  position: relative;
+  overflow: hidden;
+}
+
+.bg-pattern {
+  background-image:
+      radial-gradient(circle at 25% 25%, rgba(255, 59, 125, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 75% 75%, rgba(253, 160, 133, 0.1) 0%, transparent 50%);
+  background-size: 200px 200px;
+  animation: pattern-float 20s infinite linear;
+}
+
+@keyframes pattern-float {
   0% {
-    transform: translateY(0) scale(1);
-    opacity: 1;
+    background-position: 0% 0%;
   }
   100% {
-    transform: translateY(-30px) scale(0.8);
-    opacity: 0;
+    background-position: 100% 100%;
   }
 }
 
-/* Partikel-Effekte */
-.particle {
-  animation: particle-fade 0.5s ease-out forwards;
+.cta-button-enhanced {
+  background: linear-gradient(145deg, #ff3b7d, #fda085);
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  position: relative;
+  overflow: hidden;
 }
 
-.particle-enter-active {
-  animation: particle-spawn 0.3s ease-out;
+.cta-button-enhanced::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
 }
 
-.particle-leave-active {
-  animation: particle-fade 0.2s ease-in;
+.cta-button-enhanced:hover::before {
+  left: 100%;
 }
 
-@keyframes particle-spawn {
-  0% {
-    transform: scale(0) translateY(0);
-    opacity: 0;
+/* Enhanced Action Buttons */
+.action-btn-enhanced {
+  background: linear-gradient(145deg, #ff3b7d, #fda085);
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.action-btn-enhanced::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: all 0.5s;
+}
+
+.action-btn-enhanced:hover::after {
+  width: 300px;
+  height: 300px;
+}
+
+/* Enhanced Share Buttons */
+.share-btn-enhanced {
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.share-btn-enhanced::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.6s;
+}
+
+.share-btn-enhanced:hover::before {
+  transform: translateX(100%);
+}
+
+/* Dark Mode Adjustments */
+@media (prefers-color-scheme: dark) {
+  .polaroid-frame {
+    background: linear-gradient(145deg, #374151, #4b5563);
+    box-shadow:
+        0 25px 50px rgba(0, 0, 0, 0.4),
+        0 10px 25px rgba(0, 0, 0, 0.3),
+        inset 0 1px 3px rgba(255, 255, 255, 0.1);
   }
-  50% {
-    transform: scale(1.2) translateY(-5px);
-    opacity: 1;
+
+  .polaroid-photo {
+    background: linear-gradient(135deg, #4b5563 0%, #374151 100%);
   }
-  100% {
-    transform: scale(1) translateY(-10px);
-    opacity: 1;
+
+  .horse-name-mystery, .horse-description {
+    color: #d1d5db;
+  }
+
+  .answer-btn-enhanced {
+    background: linear-gradient(145deg, #374151, #4b5563);
+  }
+
+  .results-card-enhanced, .info-card-enhanced {
+    background: linear-gradient(145deg, #374151, #4b5563);
+  }
+
+  .badge {
+    background: linear-gradient(145deg, #4b5563, #6b7280);
+    color: #f3f4f6;
   }
 }
 
-@keyframes particle-fade {
-  0% {
-    transform: scale(1) translateY(-10px);
-    opacity: 1;
+/* Responsive Design */
+@media (max-width: 640px) {
+  .horse-polaroid-enhanced {
+    max-width: 280px;
   }
-  100% {
-    transform: scale(0.3) translateY(-25px);
-    opacity: 0;
+
+  .polaroid-photo {
+    width: 200px;
+    height: 200px;
+  }
+
+  .horse-emoji-large {
+    font-size: 4rem;
+  }
+
+  .answers-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .achievement-badges {
+    flex-direction: column;
+    align-items: center;
   }
 }
 </style>

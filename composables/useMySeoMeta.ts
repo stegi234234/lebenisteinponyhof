@@ -202,7 +202,7 @@ export const useMySeoMeta = (options: SeoMetaInput = {}) => {
         addressCountry: businessAddress.country,
       },
       image: lbDetails.image || defaultOgImage,
-      logo: `${siteUrl}/images/logos/logo.png`, // Pfad anpassen
+      logo: `${siteUrl}/images/logos/favicon.svg`, // Pfad anpassen
     };
     if (businessAddress.latitude && businessAddress.longitude) {
       localBusinessSchema.geo = {
@@ -250,7 +250,7 @@ export const useMySeoMeta = (options: SeoMetaInput = {}) => {
         publisher: {
           '@type': 'Organization',
           name: siteName,
-          logo: { '@type': 'ImageObject', url: `${siteUrl}/images/logos/logo.png` }
+          logo: { '@type': 'ImageObject', url: `${siteUrl}/images/logos/favicon.svg` }
         },
         description: description,
       }),
@@ -337,7 +337,7 @@ export const useMySeoMeta = (options: SeoMetaInput = {}) => {
         publisher: {
           '@type': 'Organization',
           name: siteName,
-          logo: { '@type': 'ImageObject', url: `${siteUrl}/images/logos/logo.png` }
+          logo: { '@type': 'ImageObject', url: `${siteUrl}/images/logos/logo.svg` }
         }
       }),
       hid: 'ld-json-website-fallback'

@@ -236,7 +236,7 @@ useMySeoMeta({
       'publisher': {
         '@type': 'Organization',
         'name': `Leben ist ein Ponyhof ${businessAddress.city}`,
-        'logo': { '@type': 'ImageObject', 'url': `${siteUrl}/images/logo.png` }
+        'logo': { '@type': 'ImageObject', 'url': `${siteUrl}/images/logos/favicon.svg` }
       },
       'description': `Tipps und Infos für das erste Ponyreiten Ihres Kindes in ${businessAddress.city}. So wird der erste Kontakt mit Ponys zu einem positiven Erlebnis.`,
       'mainEntityOfPage': { '@type': 'WebPage', '@id': `${siteUrl}${route.fullPath}` },

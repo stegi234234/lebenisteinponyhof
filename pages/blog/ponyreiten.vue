@@ -291,7 +291,7 @@
           publisher: {
             '@type': 'Organization',
             name: `Leben ist ein Ponyhof ${businessAddress.city}`,
-            logo: { '@type': 'ImageObject', url: `${siteUrl}/images/logo.png` },
+            logo: { '@type': 'ImageObject', url: `${siteUrl}/images/logos/favicon.svg` },
           },
           description: pageDescriptionForHead,
           mainEntityOfPage: { '@type': 'WebPage', '@id': currentUrlForHead },

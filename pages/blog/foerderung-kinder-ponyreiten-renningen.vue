@@ -133,12 +133,12 @@
 
       <figure class="my-10">
         <NuxtImg
-          src="/images/hero/sarah-und-nero.jpg"
+          src="/images/hero/sarah-und-nero.webp"
           :alt="`Vertrauensvolle Interaktion zwischen Sarah und Pony Nero – Basis für die Förderung von Kindern in ${businessAddress.city}`"
           class="blog-image w-full max-w-xl mx-auto rounded-xl shadow-xl cursor-pointer"
           @click="
             lightbox.open(
-              '/images/hero/sarah-und-nero.jpg',
+              '/images/hero/sarah-und-nero.webp',
               `Eine starke Bindung ist der Schlüssel zur erfolgreichen pferdegestützten Förderung in ${businessAddress.city}`
             )
           "
@@ -349,7 +349,7 @@
       publisher: {
         '@type': 'Organization',
         name: `Leben ist ein Ponyhof ${businessAddress.city}`,
-        logo: { '@type': 'ImageObject', url: `${siteUrl}/images/logo.png` },
+        logo: { '@type': 'ImageObject', url: `${siteUrl}/images/logos/favicon.svg` },
       },
       description: `Erfahren Sie, wie Ponyreiten in ${businessAddress.city} auf unserem Hof nicht nur Spaß macht, sondern auch Selbstvertrauen, Motorik, soziale Kompetenzen und Konzentration bei Kindern nachhaltig stärkt.`,
       mainEntityOfPage: { '@type': 'WebPage', '@id': `${siteUrl}${route.fullPath}` },
