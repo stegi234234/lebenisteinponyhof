@@ -1,31 +1,49 @@
-# Nuxt & Build
+# Nuxt Build Output
 .nuxt/
 .output/
 dist/
 node_modules/
 
-# Env-Dateien
+# Env-Konfig
 .env
 .env.*
 !.env.example
 
-# Editor & OS
+# IDE & System-Dateien
 .idea/
 .vscode/
 *.DS_Store
+Thumbs.db
 
-# GROSSE ORDNER & ZIPS AUSSCHLIESSEN
-public/images/
+# Medienspeicher (große Assets vermeiden)
 media-originals/
-assets/
-*.zip
-# GROSSE ORDNER
 public/videos/
+public/images/
+assets/
 
-# Zips und anderes
+# Große Dateitypen (damit du nicht versehentlich MOVs, Videos oder RAWs pushst)
+*.zip
 *.webm
 *.mp4
-*.jpeg
-*.jpg
-*.png
-*.webp
+*.mov
+*.avi
+*.mkv
+*.flac
+*.psd
+*.xcf
+*.ai
+*.eps
+*.ttf
+*.otf
+*.woff
+*.woff2
+
+# Sicherheitsmaßnahmen für Preview-Dateien & Cache
+.DS_Store
+*.log
+*.swp
+*.tmp
+npm-debug.log*
+
+# Optional: Git intern (z. B. temporäre Commit-Objekte)
+.git/modules/
